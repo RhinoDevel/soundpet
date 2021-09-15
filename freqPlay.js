@@ -2,7 +2,7 @@
 // (c) Marcel Timm, RhinoDevel, 2021
 
 /** To be run during page load to augment global soundpet object with new
- *  property called freqPlay.
+ *  property called freqplay.
  */
 (function() // IIFE
 {
@@ -45,5 +45,5 @@
     o.off = f.off;
     o.init = f.init;
 
-    soundpet.freqPlay = o;
+    soundpet.freqplay = o;
 }());
