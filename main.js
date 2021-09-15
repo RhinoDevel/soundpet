@@ -12,25 +12,28 @@
     f.onLoad = function()
     {
         soundpet.freqplay.init();
-        
-        var firstTimestamp = null;
 
         soundpet.gameloop.init(
             {
                 onLoop: function(timestamp)
                 {
-                    if(firstTimestamp === null)
+                    if(soundpet.keyboard.isPressed('a'))
                     {
-                        firstTimestamp = timestamp;
                         soundpet.freqplay.on(440);
-                        return;
                     }
-                    if((timestamp - firstTimestamp) / 1000.0 >= 5.0 )
+                    if(soundpet.keyboard.isPressed('b'))
                     {
                         soundpet.freqplay.on(880);
                     }
+                    
+                    if(soundpet.keyboard.isPressed('c'))
+                    {
+                        soundpet.freqplay.off();
+                    }
                 }
             });
+
+        soundpet.keyboard.init();
 
         soundpet.gameloop.start();
     };
