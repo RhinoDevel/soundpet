@@ -101,7 +101,7 @@
         var i = -1, j = -1, octaveOffset = -1,
             f0NoteModIndex = -1;
 
-        if(p.octaveCount < 4)
+        if(p.octaveCount < 4) // TODO: Start with octave 4!
         {
             throw 'Error: Octave count must be at least four!';
         }
