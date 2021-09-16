@@ -13,22 +13,28 @@
     {
         soundpet.freqplay.init();
 
+        soundpet.noteplay.init(
+            {
+                octaveCount: 8,
+                freqplay: soundpet.freqplay
+            });
+
         soundpet.gameloop.init(
             {
                 onLoop: function(timestamp)
                 {
                     if(soundpet.keyboard.isPressed('a'))
                     {
-                        soundpet.freqplay.on(440);
+                        soundpet.noteplay.on('C', '', 4);
                     }
                     if(soundpet.keyboard.isPressed('b'))
                     {
-                        soundpet.freqplay.on(880);
+                        soundpet.noteplay.on('D', '', 4);
                     }
                     
                     if(soundpet.keyboard.isPressed('c'))
                     {
-                        soundpet.freqplay.off();
+                        soundpet.noteplay.off();
                     }
                 }
             });
