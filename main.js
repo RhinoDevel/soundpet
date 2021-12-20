@@ -11,8 +11,7 @@
 
     f.onLoad = function()
     {
-        var playing = null,
-            playingBefore = null,
+        var pressedBefore = [],
             buttons = {
                 '2': ['C', '#', 5],
                 '3': ['D', '#', 5],
@@ -58,43 +57,113 @@
             {
                 onLoop: function(/*timestamp*/)
                 {
-                    // TODO: Stop unwanted "vibrato"!
+                    var pressed = [],
+                        i = -1,
+                        buf = -1;
 
-                    keys.some(
-                        function(key)
+                    while(++i < keys.length)
+                    {
+                        if(!soundpet.keyboard.isPressed(keys[i]))
                         {
-                            var isPlaying = playing === key;
+                            continue;
+                        }
 
-                            if(!soundpet.keyboard.isPressed(key))
-                            {
-                                // Current key is not pressed.
+                        if(pressed.length === 2)
+                        {
+                            // More keys pressed than supported.
+                            //
+                            // => Disable sound (by definition) and return:
 
-                                if(isPlaying)
-                                {
-                                    // Not pressed, but playing. => Disable.
+                            soundpet.noteplay.off();
+                            pressedBefore = [];
+                            return;
+                        }
 
-                                    soundpet.noteplay.off();
-                                    playing = null;
-                                }
-                                return false; // Next.
-                            }
+                        pressed.push(keys[i]);
+                    }
+                    if(pressed.length === 0)
+                    {
+                        soundpet.noteplay.off();
+                        pressedBefore = []/*pressed*/;
+                        return;
+                    }
+                    if(pressed.length === 1)
+                    {
+                        soundpet.noteplay.on(
+                            buttons[pressed[0]][0],
+                            buttons[pressed[0]][1],
+                            buttons[pressed[0]][2]);
+                        pressedBefore = pressed;
+                        return;
+                    }
 
-                            // Current key is pressed.
+                    // Exactly two keys are pressed.
 
-                            if(isPlaying)
-                            {
-                                return false; // Pressed and playing. => Next.
-                            }
+                    if(pressedBefore.length === 0)
+                    {
+                        // Interpreting both keys to be pressed simultaneously,
+                        // just picking one of them (the first):
 
-                            // Current key is pressed, but not playing:
-                
+                        soundpet.noteplay.on(
+                            buttons[pressed[0]][0],
+                            buttons[pressed[0]][1],
+                            buttons[pressed[0]][2]);
+                        pressedBefore = pressed;
+                        return;
+                    }
+                    if(pressedBefore.length === 1)
+                    {
+                        buf = pressed.indexOf(pressedBefore[0]);
+                        if(buf !== -1)
+                        {
+                            // The single key's note pressed before and still
+                            // pressed should currently be playing,
+                            // change to new key's note:
+                            
+                            buf = 1 - buf;
                             soundpet.noteplay.on(
-                                buttons[key][0],
-                                buttons[key][1],
-                                buttons[key][2]);
-                            playing = key;
-                            return true;
-                        });
+                                buttons[pressed[buf]][0],
+                                buttons[pressed[buf]][1],
+                                buttons[pressed[buf]][2]);
+                            pressedBefore = pressed;
+                            return;
+                        }
+
+                        // Both keys were not pressed before,
+                        // as we are interpreting both keys to be pressed
+                        // simultaneously, just picking one of them (the first):
+
+                        soundpet.noteplay.on(
+                            buttons[pressed[0]][0],
+                            buttons[pressed[0]][1],
+                            buttons[pressed[0]][2]);
+                        pressedBefore = pressed;
+                        return;
+                    }
+
+                    // There were exactly two keys pressed before, one of them
+                    // should still be playing.
+                    
+                    if(pressed.indexOf(pressedBefore[0]) !== -1
+                        || pressed.indexOf(pressedBefore[1] !== -1))
+                    {
+                        // The note of one of the keys pressed before and still
+                        // pressed should currently be playing, do nothing and
+                        // return:
+                        
+                        pressedBefore = pressed;
+                        return;
+                    }
+
+                    // Both pressed keys were not pressed before,
+                    // as we are interpreting both keys to be pressed
+                    // simultaneously, just picking one of them (the first):
+
+                    soundpet.noteplay.on(
+                        buttons[pressed[0]][0],
+                        buttons[pressed[0]][1],
+                        buttons[pressed[0]][2]);
+                    pressedBefore = pressed;
                 }
             });
 
