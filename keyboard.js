@@ -10,7 +10,7 @@
 
     var f = {}, v = {}, o = {};
 
-    v.state = [];
+    v.state = {},
 
     f.onUp = function(e)
     {
@@ -18,6 +18,10 @@
     };
     f.onDown = function(e)
     {
+        if(v.state[e.key])
+        {
+            return; // React once, only.
+        }
         v.state[e.key] = true;
     };
 
@@ -30,7 +34,7 @@
             return false;
         }
         return v.state[key];
-    }
+    };
 
     f.init = function()
     {
