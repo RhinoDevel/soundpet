@@ -12,6 +12,7 @@
     f.onLoad = function()
     {
         var playing = null,
+            playingBefore = null,
             buttons = {
                 '2': ['C', '#', 5],
                 '3': ['D', '#', 5],
@@ -66,19 +67,27 @@
 
                             if(!soundpet.keyboard.isPressed(key))
                             {
+                                // Current key is not pressed.
+
                                 if(isPlaying)
                                 {
+                                    // Not pressed, but playing. => Disable.
+
                                     soundpet.noteplay.off();
                                     playing = null;
                                 }
-                                return false;
+                                return false; // Next.
                             }
+
+                            // Current key is pressed.
 
                             if(isPlaying)
                             {
-                                return false;
+                                return false; // Pressed and playing. => Next.
                             }
 
+                            // Current key is pressed, but not playing:
+                
                             soundpet.noteplay.on(
                                 buttons[key][0],
                                 buttons[key][1],
