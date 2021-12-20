@@ -10,18 +10,25 @@
 
     var f = {}, v = {}, o = {};
 
-    v.state = {},
+    v.state = {};
+    v.whitelist = null;
 
     f.onUp = function(e)
     {
-        v.state[e.key] = false;
+        if(e.key in v.state)
+        {
+            v.state[e.key] = false;
+        }
     };
     f.onDown = function(e)
     {
-        if(v.state[e.key])
+        if(Array.isArray(v.whitelist) && v.whitelist.indexOf(e.key) === -1)
         {
-            return; // React once, only.
+            return; // Ignore, because key is not on (existing) whitelist.
         }
+
+        // No whitelist, or key is on whitelist.
+
         v.state[e.key] = true;
     };
 
@@ -36,8 +43,26 @@
         return v.state[key];
     };
 
-    f.init = function()
+    /**
+     * p = {
+     *     whitelist: Optional array of key values leading to ignoring all other
+     *                keys getting pressed/released, see:
+     *                https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values
+     * }
+     */
+    f.init = function(p)
     {
+        if(typeof p === 'object' && p !== null)
+        {
+            if(Array.isArray(p.whitelist))
+            {
+                v.whitelist = p.whitelist;
+            }
+            //
+            // Otherwise: A non-existing whitelist will be ignored,
+            //            an empty whitelist will work (stupid?).
+        }
+
         window.addEventListener('keyup', f.onUp);
         window.addEventListener('keydown', f.onDown);
     };

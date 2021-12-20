@@ -89,7 +89,7 @@
                 }
             });
 
-        soundpet.keyboard.init();
+        soundpet.keyboard.init({whitelist: keys});
 
         soundpet.gameloop.start();
     };
