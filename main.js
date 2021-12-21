@@ -51,6 +51,7 @@
 
     v.pressed = []; // Used (and set) by f.updatePlaying().
     v.playing = null; // Set/unset by f.play() and f.stop().
+                      // Read by f.updateScreen().
 
     // ******************
     // *** Functions: ***
@@ -64,11 +65,6 @@
             c.keyToNotes[key][0], c.keyToNotes[key][1], c.keyToNotes[key][2]);
         
         v.playing = key;
-
-        document.body.textContent = // TODO: Hack (1/2)!
-            key 
-                + ' ' + c.keyToNotes[key][0] + c.keyToNotes[key][1]
-                + ' ' + c.keyToNotes[key][2];
     };
 
     f.stop = function()
@@ -76,8 +72,6 @@
         soundpet.noteplay.off();
 
         v.playing = null;
-
-        document.body.textContent = '- - -'; // TODO: Hack (2/2)!
     };
 
     /**
@@ -165,6 +159,21 @@
         v.pressed = pressed;
     };
 
+    f.updateScreen = function()
+    {
+        if(v.playing !== null)
+        {
+            document.body.textContent =
+            v.playing 
+                    + ' ' + c.keyToNotes[v.playing][0] + c.keyToNotes[v.playing][1]
+                    + ' ' + c.keyToNotes[v.playing][2];
+        }
+        else
+        {
+            document.body.textContent = '- - -';
+        }
+    };
+
     f.onLoop = function(/*timestamp*/)
     {
         f.updatePlaying();
@@ -173,6 +182,8 @@
         //    notes can be played with multiple keys).
         //
         // => v.pressed holds currently pressed key/keys.
+
+        f.updateScreen();
     };
     
     f.init = function()
