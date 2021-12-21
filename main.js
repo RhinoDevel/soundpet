@@ -61,6 +61,18 @@
     {
         soundpet.noteplay.on(
             c.keyToNotes[key][0], c.keyToNotes[key][1], c.keyToNotes[key][2]);
+        
+        document.body.textContent = // TODO: Hack (1/2)!
+            key 
+                + ' ' + c.keyToNotes[key][0] + c.keyToNotes[key][1]
+                + ' ' + c.keyToNotes[key][2];
+    };
+
+    f.stop = function()
+    {
+        soundpet.noteplay.off();
+
+        document.body.textContent = '- - -'; // TODO: Hack (2/2)!
     };
 
     f.onLoop = function(/*timestamp*/)
@@ -73,7 +85,7 @@
                                    // playing, if more than two
                                    // buttons are pressed.
         {
-            soundpet.noteplay.off();
+            f.stop();
             v.pressedBefore = [];
             return;
         }
@@ -145,7 +157,7 @@
         v.pressedBefore = pressed;
     };
     
-    f.onLoad = function()
+    f.init = function()
     {
         soundpet.freqplay.init();
 
@@ -168,5 +180,5 @@
         soundpet.gameloop.start();
     };
 
-    window.addEventListener('load', f.onLoad);
+    window.addEventListener('load', f.init);
 }());
