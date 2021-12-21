@@ -57,36 +57,21 @@
             {
                 onLoop: function(/*timestamp*/)
                 {
-                    var pressed = [],
-                        i = -1,
+                    var pressed = soundpet.keyboard.getPressed(2 + 1),
                         buf = -1;
 
-                    while(++i < keys.length)
-                    {
-                        if(!soundpet.keyboard.isPressed(keys[i]))
-                        {
-                            continue;
-                        }
-
-                        if(pressed.length === 2)
-                        {
-                            // More keys pressed than supported.
-                            //
-                            // => Disable sound (by definition) and return:
-
-                            soundpet.noteplay.off();
-                            pressedBefore = [];
-                            return;
-                        }
-
-                        pressed.push(keys[i]);
-                    }
-                    if(pressed.length === 0)
+                    if(pressed.length === 0
+                        || pressed.length > 2) // By definition also stop
+                                               // playing, if more than two
+                                               // buttons are pressed.
                     {
                         soundpet.noteplay.off();
-                        pressedBefore = []/*pressed*/;
+                        pressedBefore = [];
                         return;
                     }
+
+                    // One or two keys are pressed.
+
                     if(pressed.length === 1)
                     {
                         soundpet.noteplay.on(
