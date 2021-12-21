@@ -44,6 +44,35 @@
     };
 
     /**
+     * - Maximum length given is optional. If set, just the first found pressed
+     *   keys will be returned, until the maximum length equals the count of
+     *   found keys.
+     */
+    f.getPressed = function(maxLen)
+    {
+        var retVal = [],
+            key = null,
+            maxLenToUse = typeof maxLen === 'number' && !isNaN(maxLen)
+                ? maxLen : null;
+
+        for(key in v.state)
+        {
+            if(!v.state[key])
+            {
+                continue;
+            }
+            
+            retVal.push(key);
+            
+            if(maxLenToUse !== null && retVal.length === maxLen)
+            {
+                break;
+            }
+        }
+        return retVal;
+    };
+
+    /**
      * p = {
      *     whitelist: Optional array of key values leading to ignoring all other
      *                keys getting pressed/released, see:
@@ -69,6 +98,7 @@
 
     o.init = f.init;
     o.isPressed = f.isPressed;
+    o.getPressed = f.getPressed;
 
     soundpet.keyboard = o;
 }());
