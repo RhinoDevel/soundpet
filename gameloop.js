@@ -20,6 +20,9 @@
 
     f.loop = function(timestamp)
     {
+        // TODO: Add init. parameter to set to 50Hz or 60Hz mode, see:
+        //       https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
+
         // This is normally at 60 FPS/Hz:
         //
         //console.log(
