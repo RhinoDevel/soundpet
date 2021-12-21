@@ -49,7 +49,8 @@
     // *** "Static" variables: ***
     // ***************************
 
-    v.pressedBefore = [];
+    v.pressed = []; // Used (and set) by f.updatePlaying().
+    v.playing = null; // Set/unset by f.play() and f.stop().
 
     // ******************
     // *** Functions: ***
@@ -62,6 +63,8 @@
         soundpet.noteplay.on(
             c.keyToNotes[key][0], c.keyToNotes[key][1], c.keyToNotes[key][2]);
         
+        v.playing = key;
+
         document.body.textContent = // TODO: Hack (1/2)!
             key 
                 + ' ' + c.keyToNotes[key][0] + c.keyToNotes[key][1]
@@ -72,21 +75,26 @@
     {
         soundpet.noteplay.off();
 
+        v.playing = null;
+
         document.body.textContent = '- - -'; // TODO: Hack (2/2)!
     };
 
-    f.onLoop = function(/*timestamp*/)
+    /**
+     * - Calls f.play() and f.stop().
+     */
+    f.updatePlaying = function()
     {
         var pressed = soundpet.keyboard.getPressed(2 + 1),
             buf = -1;
 
         if(pressed.length === 0
             || pressed.length > 2) // By definition also stop
-                                   // playing, if more than two
-                                   // buttons are pressed.
+                                // playing, if more than two
+                                // buttons are pressed.
         {
             f.stop();
-            v.pressedBefore = [];
+            v.pressed = [];
             return;
         }
 
@@ -97,24 +105,24 @@
             // Just one key is pressed.
 
             f.play(pressed[0]);
-            v.pressedBefore = pressed;
+            v.pressed = pressed;
             return;
         }
 
         // Exactly two keys are pressed.
 
-        if(v.pressedBefore.length === 0)
+        if(v.pressed.length === 0)
         {
             // Interpreting both keys to be pressed simultaneously,
             // just picking one of them (the first):
 
             f.play(pressed[0]);
-            v.pressedBefore = pressed;
+            v.pressed = pressed;
             return;
         }
-        if(v.pressedBefore.length === 1)
+        if(v.pressed.length === 1)
         {
-            buf = pressed.indexOf(v.pressedBefore[0]);
+            buf = pressed.indexOf(v.pressed[0]);
             if(buf !== -1)
             {
                 // The single key's note pressed before and still
@@ -122,7 +130,7 @@
                 // change to new key's note:
                 
                 f.play(pressed[1 - buf]);
-                v.pressedBefore = pressed;
+                v.pressed = pressed;
                 return;
             }
 
@@ -131,21 +139,21 @@
             // simultaneously, just picking one of them (the first):
 
             f.play(pressed[0]);
-            v.pressedBefore = pressed;
+            v.pressed = pressed;
             return;
         }
 
         // There were exactly two keys pressed before, one of them
         // should still be playing.
         
-        if(pressed.indexOf(v.pressedBefore[0]) !== -1
-            || pressed.indexOf(v.pressedBefore[1] !== -1))
+        if(pressed.indexOf(v.pressed[0]) !== -1
+            || pressed.indexOf(v.pressed[1] !== -1))
         {
             // The note of one of the keys pressed before and still
             // pressed should currently be playing, do nothing and
             // return:
             
-            v.pressedBefore = pressed;
+            v.pressed = pressed;
             return;
         }
 
@@ -154,7 +162,17 @@
         // simultaneously, just picking one of them (the first):
 
         f.play(pressed[0]);
-        v.pressedBefore = pressed;
+        v.pressed = pressed;
+    };
+
+    f.onLoop = function(/*timestamp*/)
+    {
+        f.updatePlaying();
+        //
+        // => v.playing holds currently played note's key (or one of them, some
+        //    notes can be played with multiple keys).
+        //
+        // => v.pressed holds currently pressed key/keys.
     };
     
     f.init = function()
