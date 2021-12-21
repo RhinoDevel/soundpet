@@ -164,8 +164,9 @@
         if(v.playing !== null)
         {
             document.body.textContent =
-            v.playing 
-                    + ' ' + c.keyToNotes[v.playing][0] + c.keyToNotes[v.playing][1]
+                v.playing 
+                    + ' ' + c.keyToNotes[v.playing][0]
+                        + c.keyToNotes[v.playing][1]
                     + ' ' + c.keyToNotes[v.playing][2];
         }
         else
