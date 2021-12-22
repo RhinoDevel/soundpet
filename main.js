@@ -7,208 +7,139 @@
 {
     'use strict';
 
-    var f = {}, c = {}, v = {};
+    var f = {}, v = {};
 
-    // ********************
-    // *** "Constants": ***
-    // ********************
+    v.soundpetStatus = null;
 
-    c.keyToNotes = { // Hard-coded to german keyboard layout.
-        '2': ['C', '#', 5],
-        '3': ['D', '#', 5],
-        '5': ['F', '#', 5],
-        '6': ['G', '#', 5],
-        '7': ['A', '#', 5],
-
-        'q': ['C', '', 5],
-        'w': ['D', '', 5],
-        'e': ['E', '', 5],
-        'r': ['F', '', 5],
-        't': ['G', '', 5],
-        'z': ['A', '', 5],
-        'u': ['B', '', 5],
-        'i': ['C', '', 6],
-
-        's': ['C', '#', 4],
-        'd': ['D', '#', 4],
-        'g': ['F', '#', 4],
-        'h': ['G', '#', 4],
-        'j': ['A', '#', 4],
-
-        'y': ['C', '', 4],
-        'x': ['D', '', 4],
-        'c': ['E', '', 4],
-        'v': ['F', '', 4],
-        'b': ['G', '', 4],
-        'n': ['A', '', 4],
-        'm': ['B', '', 4],
-        ',': ['C', '', 5]
+    f.prepareBodyForFullScreen = function()
+    {
+        document.body.style.width = '100%';
+        document.body.style.height = '100%';
+        document.body.style.border = '0px none';
+        document.body.style.padding = '0px';
+        document.body.style.margin = '0px';
     };
 
-    // ***************************
-    // *** "Static" variables: ***
-    // ***************************
-
-    v.pressed = []; // Used (and set) by f.updatePlaying().
-    v.playing = null; // Set/unset by f.play() and f.stop().
-                      // Read by f.updateScreen().
-
-    // ******************
-    // *** Functions: ***
-    // ******************
-
-    /** Play note corresponding to key given.
-     */
-    f.play = function(key)
+    f.createContainer = function(width, height)
     {
-        gamupet.noteplay.on(
-            c.keyToNotes[key][0], c.keyToNotes[key][1], c.keyToNotes[key][2]);
+        var retVal = document.createElement('div');
+
+        retVal.style.width = String(width) + 'px';
+        retVal.style.height = String(height) + 'px';
+        retVal.style['background-color'] = 'lightgray';
+        retVal.style.display = 'flex';
+        retVal.style['justify-content'] = 'center';
+        retVal.style['align-items'] = 'center';
+
+        return retVal;
+    };
+
+    f.createEle = function()
+    {
+        var retVal = document.createElement('div');
         
-        v.playing = key;
-    };
+        retVal.style.order = String(1);
+        retVal.style.position = 'relative';
 
-    f.stop = function()
-    {
-        gamupet.noteplay.off();
-
-        v.playing = null;
+        return retVal;
     };
 
     /**
-     * - Calls f.play() and f.stop().
+     * - Returns canvas.
      */
-    f.updatePlaying = function()
+    f.initEles = function()
     {
-        var pressed = gamupet.keyboard.getPressed(2 + 1),
-            buf = -1;
+        var ele = f.createEle(),
+            container = null,
+            outerDim = {};
 
-        if(pressed.length === 0
-            || pressed.length > 2) // By definition also stop
-                                // playing, if more than two
-                                // buttons are pressed.
+        if(gamupet.c.fullscreen)
         {
-            f.stop();
-            v.pressed = [];
-            return;
-        }
+            f.prepareBodyForFullScreen();
 
-        // One or two keys are pressed.
-
-        if(pressed.length === 1)
-        {
-            // Just one key is pressed.
-
-            f.play(pressed[0]);
-            v.pressed = pressed;
-            return;
-        }
-
-        // Exactly two keys are pressed.
-
-        if(v.pressed.length === 0)
-        {
-            // Interpreting both keys to be pressed simultaneously,
-            // just picking one of them (the first):
-
-            f.play(pressed[0]);
-            v.pressed = pressed;
-            return;
-        }
-        if(v.pressed.length === 1)
-        {
-            buf = pressed.indexOf(v.pressed[0]);
-            if(buf !== -1)
-            {
-                // The single key's note pressed before and still
-                // pressed should currently be playing,
-                // change to new key's note:
-                
-                f.play(pressed[1 - buf]);
-                v.pressed = pressed;
-                return;
-            }
-
-            // Both keys were not pressed before,
-            // as we are interpreting both keys to be pressed
-            // simultaneously, just picking one of them (the first):
-
-            f.play(pressed[0]);
-            v.pressed = pressed;
-            return;
-        }
-
-        // There were exactly two keys pressed before, one of them
-        // should still be playing.
-        
-        if(pressed.indexOf(v.pressed[0]) !== -1
-            || pressed.indexOf(v.pressed[1] !== -1))
-        {
-            // The note of one of the keys pressed before and still
-            // pressed should currently be playing, do nothing and
-            // return:
-            
-            v.pressed = pressed;
-            return;
-        }
-
-        // Both pressed keys were not pressed before,
-        // as we are interpreting both keys to be pressed
-        // simultaneously, just picking one of them (the first):
-
-        f.play(pressed[0]);
-        v.pressed = pressed;
-    };
-
-    f.updateScreen = function()
-    {
-        if(v.playing !== null)
-        {
-            document.body.textContent =
-                v.playing 
-                    + ' ' + c.keyToNotes[v.playing][0]
-                        + c.keyToNotes[v.playing][1]
-                    + ' ' + c.keyToNotes[v.playing][2];
+            outerDim.width = document.body.clientWidth;
+            outerDim.height = document.body.clientHeight;
         }
         else
         {
-            document.body.textContent = '- - -';
+            outerDim.width = 640;  // These are
+            outerDim.height = 480; // sample values.
         }
+
+        container = f.createContainer(outerDim.width, outerDim.height);
+
+        container.appendChild(ele);
+        document.body.appendChild(container);
+
+        v.soundpetStatus = document.createElement('div');
+        document.body.appendChild(v.soundpetStatus);
+
+        return gamupet.room.init(
+            {
+                dim: {
+                    inner: gamupet.c.dim.screen,
+                    outer: outerDim
+                },
+                createCanvas: gamupet.ele.createCanvas,
+                ele: ele,
+                backgroundColor: 'rgba('
+                        + String(gamupet.c.pix.off.r)
+                        + ',' + String(gamupet.c.pix.off.g)
+                        + ',' + String(gamupet.c.pix.off.b)
+                        + ',' + String(gamupet.c.pix.off.a)
+                    + ')'
+            });
     };
 
-    f.onLoop = function(/*timestamp*/)
+    f.onLoad = function()
     {
-        f.updatePlaying();
-        //
-        // => v.playing holds currently played note's key (or one of them, some
-        //    notes can be played with multiple keys).
-        //
-        // => v.pressed holds currently pressed key/keys.
+        var canvas = f.initEles();
 
-        f.updateScreen();
-    };
-    
-    f.init = function()
-    {
+        gamupet.chardraw.init(
+            {
+                canvas: canvas,
+                dim: {
+                    char: gamupet.c.dim.char
+                },
+                pix: {
+                    on: gamupet.c.pix.on,
+                    off: gamupet.c.pix.off
+                },
+                chars: gamupet.c.chars
+            });
+
         gamupet.freqplay.init();
 
-        gamupet.noteplay.init(
+        // (noteplay and keyboard will be initialised by soundpet)
+
+        gamupet.soundpet.init(
             {
-                octaveCount: 8,
-                freqplay: gamupet.freqplay
+                // dim: {
+                //     width: gamupet.c.dim.screen.width
+                //             / gamupet.c.dim.char.width,
+                //     height: gamupet.c.dim.screen.height
+                //             / gamupet.c.dim.char.height
+                // },
+                // charCount: gamupet.c.charCount,
+                //
+                // drawPetAt: gamupet.chardraw.petAt,
+                //getRand: gamupet.math.getRand,
+
+                freqplay: gamupet.freqplay,
+                noteplay: gamupet.noteplay,
+                keyboard: gamupet.keyboard,
+
+                status: v.soundpetStatus
             });
 
         gamupet.gameloop.init(
             {
-                onLoop: f.onLoop
-            });
-
-        gamupet.keyboard.init(
-            {
-                whitelist: Object.keys(c.keyToNotes)
+                freq: gamupet.c.freq,
+                onLoop: gamupet.soundpet.onLoop
             });
 
         gamupet.gameloop.start();
     };
 
-    window.addEventListener('load', f.init);
+    window.addEventListener('load', f.onLoad);
 }());
