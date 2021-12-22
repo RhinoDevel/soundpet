@@ -1,7 +1,7 @@
 
 // (c) Marcel Timm, RhinoDevel, 2021
 
-/** To be run during page load to augment global gamupet object with new
+/** To be run during page load to augment global soundpet object with new
  *  property called math, which is an object holding functions related to
  *  mathematics.
  */
@@ -18,5 +18,5 @@
 
     o.getRand = f.getRand;
 
-    gamupet.math = o;
+    soundpet.math = o;
 }());
