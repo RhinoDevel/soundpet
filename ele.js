@@ -1,7 +1,7 @@
 
 // (c) Marcel Timm, RhinoDevel, 2021
 
-/** To be run during page load to augment global soundpet object with new
+/** To be run during page load to augment global gamupet object with new
  *  property called ele, which is an object holding functions to create
  *  and handle HTML elements.
  */
@@ -49,5 +49,5 @@
 
     o.createCanvas = f.createCanvas;
 
-    soundpet.ele = o;
+    gamupet.ele = o;
 }());

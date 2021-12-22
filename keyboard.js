@@ -1,7 +1,7 @@
 
 // (c) Marcel Timm, RhinoDevel, 2021
 
-/** To be run during page load to augment global soundpet object with new
+/** To be run during page load to augment global gamupet object with new
  *  property called keyboard.
  */
 (function() // IIFE
@@ -100,5 +100,5 @@
     o.isPressed = f.isPressed;
     o.getPressed = f.getPressed;
 
-    soundpet.keyboard = o;
+    gamupet.keyboard = o;
 }());

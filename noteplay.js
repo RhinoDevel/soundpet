@@ -1,7 +1,7 @@
 
 // (c) Marcel Timm, RhinoDevel, 2021
 
-/** To be run during page load to augment global soundpet object with new
+/** To be run during page load to augment global gamupet object with new
  *  property called noteplay.
  */
 (function() // IIFE
@@ -130,5 +130,5 @@
     o.off = f.off;
     o.init = f.init;
 
-    soundpet.noteplay = o;
+    gamupet.noteplay = o;
 }());

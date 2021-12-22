@@ -1,7 +1,7 @@
 
 // (c) Marcel Timm, RhinoDevel, 2021
 
-/** To be run during page load to augment global soundpet object with new
+/** To be run during page load to augment global gamupet object with new
  *  property called gameloop.
  */
 (function() // IIFE
@@ -66,6 +66,6 @@
     o.init = f.init;
     o.start = f.start;
 
-    soundpet.gameloop = o;
+    gamupet.gameloop = o;
 }());
  

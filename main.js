@@ -61,7 +61,7 @@
      */
     f.play = function(key)
     {
-        soundpet.noteplay.on(
+        gamupet.noteplay.on(
             c.keyToNotes[key][0], c.keyToNotes[key][1], c.keyToNotes[key][2]);
         
         v.playing = key;
@@ -69,7 +69,7 @@
 
     f.stop = function()
     {
-        soundpet.noteplay.off();
+        gamupet.noteplay.off();
 
         v.playing = null;
     };
@@ -79,7 +79,7 @@
      */
     f.updatePlaying = function()
     {
-        var pressed = soundpet.keyboard.getPressed(2 + 1),
+        var pressed = gamupet.keyboard.getPressed(2 + 1),
             buf = -1;
 
         if(pressed.length === 0
@@ -189,25 +189,25 @@
     
     f.init = function()
     {
-        soundpet.freqplay.init();
+        gamupet.freqplay.init();
 
-        soundpet.noteplay.init(
+        gamupet.noteplay.init(
             {
                 octaveCount: 8,
-                freqplay: soundpet.freqplay
+                freqplay: gamupet.freqplay
             });
 
-        soundpet.gameloop.init(
+        gamupet.gameloop.init(
             {
                 onLoop: f.onLoop
             });
 
-        soundpet.keyboard.init(
+        gamupet.keyboard.init(
             {
                 whitelist: Object.keys(c.keyToNotes)
             });
 
-        soundpet.gameloop.start();
+        gamupet.gameloop.start();
     };
 
     window.addEventListener('load', f.init);
