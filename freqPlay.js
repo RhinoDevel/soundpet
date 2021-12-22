@@ -22,7 +22,7 @@
         f.on(0);
     };
 
-    f.init = function(p)
+    f.init = function()
     {
         var osciParams = {
                 type: 'square',
