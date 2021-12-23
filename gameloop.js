@@ -31,17 +31,17 @@
         // possible, depends on elapsed time between two calls of the loop
         // function which itself depends on hardware and OS:
         //
-        console.log(
-        'Elapsed: ' + String(elapsed)
-        + ' '
-        + 'FPS: '
-            + String(
-                Math.round(
-                    1.0 / (elapsed / 1000.0))));
+        // console.log(
+        // 'Elapsed: ' + String(elapsed)
+        // + ' '
+        // + 'FPS: '
+        //     + String(
+        //         Math.round(
+        //             1.0 / (elapsed / 1000.0))));
         
         v.last_timestamp = timestamp;
 
-        v.onLoop(timestamp); // ms
+        v.onLoop(timestamp, elapsed); // ms
     };
 
     f.init = function(p)
