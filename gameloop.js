@@ -11,9 +11,9 @@
     var f = {}, v = {}, o = {};
 
     v.last_timestamp = 0.0;
-    v.fixedDelay = 0.0; // ms
+    v.step = 0.0; // ms
     v.delta = 0.0;
-    
+
     v.update = null;
     v.draw = null;
 
@@ -23,7 +23,7 @@
 
         window.requestAnimationFrame(f.loop);
 
-        if(elapsed < v.fixedDelay)
+        if(elapsed < v.step)
         {
             return;
         }
@@ -34,8 +34,8 @@
         {
             v.update();
 
-            v.delta -= v.fixedDelay;
-        }while(v.delta >= v.fixedDelay);
+            v.delta -= v.step;
+        }while(v.delta >= v.step);
 
         v.last_timestamp = timestamp;
 
@@ -44,11 +44,11 @@
 
     f.init = function(p)
     {
-        v.update = p.update;
-        v.draw = p.draw;
+        v.update = p.update; // Called once per step.
+        v.draw = p.draw; // Called, when drawing is possible and makes sense.
 
-        v.fixedDelay = 1.0 / p.freq; // s (because frequency is in Hz).
-        v.fixedDelay = 1000.0 * v.fixedDelay; // ms
+        v.step = 1.0 / p.freq; // s (because frequency is in Hz).
+        v.step = 1000.0 * v.step; // ms
     };
 
     f.start = function()
