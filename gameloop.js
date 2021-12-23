@@ -10,7 +10,7 @@
 
     var f = {}, v = {}, o = {};
 
-    v.last_timestamp = 0.0;
+    v.lastDrawAt = 0.0;
     v.step = 0.0; // ms (e.g. ~16.7ms for 60 FPS).
     v.delta = 0.0; // Holds milliseconds that still need to be processed by
                    // v.update(). Is not 0.0, if wanted FPS is not dividable
@@ -21,7 +21,7 @@
 
     f.loop = function(timestamp)
     {
-        var elapsed = timestamp - v.last_timestamp; // ms
+        var elapsed = timestamp - v.lastDrawAt; // ms
 
         window.requestAnimationFrame(f.loop);
 
@@ -39,8 +39,7 @@
             v.delta -= v.step;
         }while(v.delta >= v.step);
 
-        v.last_timestamp = timestamp;
-
+        v.lastDrawAt = timestamp;
         v.draw();
     };
 
