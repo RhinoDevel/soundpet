@@ -8,12 +8,10 @@
 {
     'use strict';
 
-    var f = {}, c = {}, v = {}, o = {};
-
-    c.freq = 60.0; // Hz (default value). Refresh rate (usually 50Hz or 60Hz).
+    var f = {}, v = {}, o = {};
 
     v.last_timestamp = 0.0;
-    v.time = -1.0; // ms
+    v.fixedDelay = null; // ms
     v.onLoop = null;
 
     f.loop = function(timestamp)
@@ -22,7 +20,7 @@
 
         window.requestAnimationFrame(f.loop);
 
-        if(elapsed < v.time)
+        if(v.fixedDelay !== null && elapsed < v.fixedDelay)
         {
             return;
         }
@@ -46,16 +44,13 @@
 
     f.init = function(p)
     {
-        var freq = c.freq;
-
         v.onLoop = p.onLoop;
 
         if(typeof p.freq === 'number')
         {
-            freq = p.freq;
+            v.fixedDelay = 1.0 / p.freq; // s (because frequency is in Hz).
+            v.fixedDelay = 1000.0 * v.fixedDelay; // ms
         }
-        v.time = 1.0 / freq; // s (because frequency is in Hz).
-        v.time = 1000.0 * v.time; // ms
     };
 
     f.start = function()
