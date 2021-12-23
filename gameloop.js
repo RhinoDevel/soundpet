@@ -12,7 +12,8 @@
 
     v.last_timestamp = 0.0;
     v.fixedDelay = null; // ms
-    v.onLoop = null;
+    v.update = null;
+    v.draw = null;
 
     f.loop = function(timestamp)
     {
@@ -39,12 +40,14 @@
         
         v.last_timestamp = timestamp;
 
-        v.onLoop(timestamp, elapsed); // ms
+        v.update(timestamp, elapsed);
+        v.draw(timestamp, elapsed);
     };
 
     f.init = function(p)
     {
-        v.onLoop = p.onLoop;
+        v.update = p.update;
+        v.draw = p.draw;
 
         if(typeof p.freq === 'number')
         {

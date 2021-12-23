@@ -135,7 +135,8 @@
         gamupet.gameloop.init(
             {
                 freq: gamupet.c.freq,
-                onLoop: gamupet.soundpet.onLoop
+                update: gamupet.soundpet.update,
+                draw: gamupet.soundpet.draw
             });
 
         gamupet.gameloop.start();

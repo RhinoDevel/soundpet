@@ -215,7 +215,7 @@
         v.lastStatusUpdate = timestamp;
     };
 
-    f.onLoop = function(timestamp, elapsed)
+    f.update = function(timestamp, elapsed)
     {
         f.updatePlaying();
         //
@@ -223,7 +223,10 @@
         //    notes can be played with multiple keys).
         //
         // => v.pressed holds currently pressed key/keys.
+    };
 
+    f.draw = function(timestamp, elapsed)
+    {
         f.updateStatus(timestamp, elapsed);
     };
     
@@ -247,7 +250,8 @@
     };
 
     o.init = f.init;
-    o.onLoop = f.onLoop;
+    o.update = f.update;
+    o.draw = f.draw;
 
     gamupet.soundpet = o;
 }());
