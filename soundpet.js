@@ -58,10 +58,7 @@
     v.keyboard = null;
     
     v.status = null;
-
     v.lastStatusUpdate = null;
-    v.minElapsed = Number.MAX_VALUE;
-    v.maxElapsed = Number.MIN_VALUE;
     
     // ******************
     // *** Functions: ***
@@ -169,18 +166,10 @@
         v.pressed = pressed;
     };
 
-    f.updateStatus = function(timestamp, elapsed)
+    f.updateStatus = function()
     {
-        var str = '';
-
-        if(elapsed > 0.0 && elapsed < v.minElapsed)
-        {
-            v.minElapsed = elapsed;
-        }
-        if(elapsed > v.maxElapsed)
-        {
-            v.maxElapsed = elapsed;
-        }
+        var str = '',
+            timestamp = performance.now();
 
         if(v.lastStatusUpdate !== null
             && timestamp - v.lastStatusUpdate < 100.0)
@@ -188,17 +177,6 @@
             return;
         }
 
-        str += 'Cur.: ~' + String(Math.round(elapsed)) + 'ms'
-        str += ' / ';
-        str += String(Math.round(1.0 / (elapsed / 1000.0))) + ' FPS';
-
-        str += ' | ';
-        str += 'Min.: ~' + String(Math.round(v.minElapsed)) + 'ms';
-
-        str += ' | ';
-        str += 'Max.: ~' + String(Math.round(v.maxElapsed)) + 'ms';
-
-        str += ' | ';
         if(v.playing !== null)
         {
             str += v.playing 
@@ -215,7 +193,7 @@
         v.lastStatusUpdate = timestamp;
     };
 
-    f.update = function(timestamp, elapsed)
+    f.update = function()
     {
         f.updatePlaying();
         //
@@ -225,9 +203,9 @@
         // => v.pressed holds currently pressed key/keys.
     };
 
-    f.draw = function(timestamp, elapsed)
+    f.draw = function()
     {
-        f.updateStatus(timestamp, elapsed);
+        f.updateStatus();
     };
     
     f.init = function(p)

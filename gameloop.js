@@ -11,7 +11,9 @@
     var f = {}, v = {}, o = {};
 
     v.last_timestamp = 0.0;
-    v.fixedDelay = null; // ms
+    v.fixedDelay = 0.0; // ms
+    v.delta = 0.0;
+    
     v.update = null;
     v.draw = null;
 
@@ -21,27 +23,23 @@
 
         window.requestAnimationFrame(f.loop);
 
-        if(v.fixedDelay !== null && elapsed < v.fixedDelay)
+        if(elapsed < v.fixedDelay)
         {
             return;
         }
-        
-        // Getting exactly 50Hz, 60Hz or other wanted values is not always
-        // possible, depends on elapsed time between two calls of the loop
-        // function which itself depends on hardware and OS:
-        //
-        // console.log(
-        // 'Elapsed: ' + String(elapsed)
-        // + ' '
-        // + 'FPS: '
-        //     + String(
-        //         Math.round(
-        //             1.0 / (elapsed / 1000.0))));
-        
+
+        v.delta += elapsed;
+
+        do
+        {
+            v.update();
+
+            v.delta -= v.fixedDelay;
+        }while(v.delta >= v.fixedDelay);
+
         v.last_timestamp = timestamp;
 
-        v.update(timestamp, elapsed);
-        v.draw(timestamp, elapsed);
+        v.draw();
     };
 
     f.init = function(p)
@@ -49,11 +47,8 @@
         v.update = p.update;
         v.draw = p.draw;
 
-        if(typeof p.freq === 'number')
-        {
-            v.fixedDelay = 1.0 / p.freq; // s (because frequency is in Hz).
-            v.fixedDelay = 1000.0 * v.fixedDelay; // ms
-        }
+        v.fixedDelay = 1.0 / p.freq; // s (because frequency is in Hz).
+        v.fixedDelay = 1000.0 * v.fixedDelay; // ms
     };
 
     f.start = function()
