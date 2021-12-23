@@ -183,7 +183,7 @@
         }
 
         if(v.lastStatusUpdate !== null
-            && timestamp - v.lastStatusUpdate < 500.0)
+            && timestamp - v.lastStatusUpdate < 100.0)
         {
             return;
         }
