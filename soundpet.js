@@ -165,23 +165,31 @@
         v.pressed = pressed;
     };
 
-    f.updateStatus = function()
+    f.updateStatus = function(elapsed)
     {
+        var str = '';
+
+        str += '~' + String(Math.round(elapsed)) + 'ms'
+        str += ' / ';
+        str += String(Math.round(1.0 / (elapsed / 1000.0))) + ' FPS';
+
+        str += ' | ';
         if(v.playing !== null)
         {
-            v.status.textContent =
-                v.playing 
+            str += v.playing 
                     + ' ' + c.keyToNotes[v.playing][0]
                         + c.keyToNotes[v.playing][1]
                     + ' ' + c.keyToNotes[v.playing][2];
         }
         else
         {
-            v.status.textContent = '- - -';
+            str += '- - -';
         }
+
+        v.status.textContent = str;
     };
 
-    f.onLoop = function(/*timestamp*/)
+    f.onLoop = function(timestamp, elapsed)
     {
         f.updatePlaying();
         //
@@ -190,7 +198,7 @@
         //
         // => v.pressed holds currently pressed key/keys.
 
-        f.updateStatus();
+        f.updateStatus(elapsed);
     };
     
     f.init = function(p)
