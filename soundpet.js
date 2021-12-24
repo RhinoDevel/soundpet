@@ -14,36 +14,68 @@
     // *** "Constants": ***
     // ********************
 
+    c.startOctave = 4;
+    c.notes = [
+        ['C', '', c.startOctave],
+        ['C', '#', c.startOctave],
+        ['D', '', c.startOctave],
+        ['D', '#', c.startOctave],
+        ['E', '', c.startOctave],
+        ['F', '', c.startOctave],
+        ['F', '#', c.startOctave],
+        ['G', '', c.startOctave],
+        ['G', '#', c.startOctave],
+        ['A', '', c.startOctave],
+        ['A', '#', c.startOctave],
+        ['B', '', c.startOctave],
+
+        ['C', '', c.startOctave + 1],
+        ['C', '#', c.startOctave + 1],
+        ['D', '', c.startOctave + 1],
+        ['D', '#', c.startOctave + 1],
+        ['E', '', c.startOctave + 1],
+        ['F', '', c.startOctave + 1],
+        ['F', '#', c.startOctave + 1],
+        ['G', '', c.startOctave + 1],
+        ['G', '#', c.startOctave + 1],
+        ['A', '', c.startOctave + 1],
+        ['A', '#', c.startOctave + 1],
+        ['B', '', c.startOctave + 1],
+
+        ['C', '', c.startOctave + 2]
+    ];
     c.keyToNotes = { // Hard-coded to german keyboard layout.
-        '2': ['C', '#', 5],
-        '3': ['D', '#', 5],
-        '5': ['F', '#', 5],
-        '6': ['G', '#', 5],
-        '7': ['A', '#', 5],
+        '2': c.notes[1 * 12 +  1],
+        '3': c.notes[1 * 12 +  3],
+        '5': c.notes[1 * 12 +  6],
+        '6': c.notes[1 * 12 +  8],
+        '7': c.notes[1 * 12 + 10],
 
-        'q': ['C', '', 5],
-        'w': ['D', '', 5],
-        'e': ['E', '', 5],
-        'r': ['F', '', 5],
-        't': ['G', '', 5],
-        'z': ['A', '', 5],
-        'u': ['B', '', 5],
-        'i': ['C', '', 6],
+        'q': c.notes[1 * 12 +  0],
+        'w': c.notes[1 * 12 +  2],
+        'e': c.notes[1 * 12 +  4],
+        'r': c.notes[1 * 12 +  5],
+        't': c.notes[1 * 12 +  7],
+        'z': c.notes[1 * 12 +  9],
+        'u': c.notes[1 * 12 + 11],
+        //
+        'i': c.notes[2 * 12 +  0],
 
-        's': ['C', '#', 4],
-        'd': ['D', '#', 4],
-        'g': ['F', '#', 4],
-        'h': ['G', '#', 4],
-        'j': ['A', '#', 4],
+        's': c.notes[0 * 12 +  1],
+        'd': c.notes[0 * 12 +  3],
+        'g': c.notes[0 * 12 +  6],
+        'h': c.notes[0 * 12 +  8],
+        'j': c.notes[0 * 12 + 10],
 
-        'y': ['C', '', 4],
-        'x': ['D', '', 4],
-        'c': ['E', '', 4],
-        'v': ['F', '', 4],
-        'b': ['G', '', 4],
-        'n': ['A', '', 4],
-        'm': ['B', '', 4],
-        ',': ['C', '', 5]
+        'y': c.notes[0 * 12 +  0],
+        'x': c.notes[0 * 12 +  2],
+        'c': c.notes[0 * 12 +  4],
+        'v': c.notes[0 * 12 +  5],
+        'b': c.notes[0 * 12 +  7],
+        'n': c.notes[0 * 12 +  9],
+        'm': c.notes[0 * 12 + 11],
+        //
+        ',': c.notes[1 * 12 +  0],
     };
 
     // ***************************
@@ -91,8 +123,8 @@
 
         if(pressed.length === 0
             || pressed.length > 2) // By definition also stop
-                                // playing, if more than two
-                                // buttons are pressed.
+                                   // playing, if more than two
+                                   // buttons are pressed.
         {
             f.stop();
             v.pressed = [];
