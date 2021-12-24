@@ -291,19 +291,14 @@
     f.init = function(p)
     {
         v.noteplay = p.noteplay;
-        v.keyboard = p.keyboard;
-
+        v.keyboard = p.keyboard.create({whitelist: Object.keys(c.keyToNotes)});
+        
         v.status = p.status;
 
         v.noteplay.init(
             {
                 octaveCount: 8,
                 freqplay: p.freqplay
-            });
-
-        v.keyboard.init(
-            {
-                whitelist: Object.keys(c.keyToNotes)
             });
     };
 
