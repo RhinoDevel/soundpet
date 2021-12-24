@@ -166,7 +166,7 @@
      */
     f.updatePlaying = function()
     {
-        var pressed = gamupet.keyboard.getPressed(2 + 1),
+        var pressed = v.keyboard.getPressed(2 + 1),
             buf = -1;
 
         if(pressed.length === 0
