@@ -1,6 +1,54 @@
 
 // (c) Marcel Timm, RhinoDevel, 2021
 
+// Recording export format:
+//
+/*
+{
+    step: 20, // ms (e.g. 20ms for 50Hz/FPS).
+    notes: [
+        ['C', '', 4], // Note, modifier and octave.
+        ['C', '#', 4],
+        ['D', '', 4],
+        ['D', '#', 4],
+        ['E', '', 4],
+        ['F', '', 4],
+        ['F', '#', 4],
+        ['G', '', 4],
+        ['G', '#', 4],
+        ['A', '', 4],
+        ['A', '#', 4],
+        ['B', '', 4],
+
+        ['C', '', 4 + 1],
+        ['C', '#', 4 + 1],
+        ['D', '', 4 + 1],
+        ['D', '#', 4 + 1],
+        ['E', '', 4 + 1],
+        ['F', '', 4 + 1],
+        ['F', '#', 4 + 1],
+        ['G', '', 4 + 1],
+        ['G', '#', 4 + 1],
+        ['A', '', 4 + 1],
+        ['A', '#', 4 + 1],
+        ['B', '', 4 + 1],
+
+        ['C', '', 4 + 2]
+    ],
+	
+	tune: [
+	    [50, 0], // Length in multiples of step and note's index (255 = pause).
+		[50, 2], 
+		[50, 4], 
+		[50, 5], 
+		[100, 7], 
+		[50, 9], 
+		[50, 11], 
+		[100, 12]
+	]
+}
+*/
+
 /** To be run during page load to augment global gamupet object with new
  *  property called soundpet.
  */
