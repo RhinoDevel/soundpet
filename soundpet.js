@@ -149,10 +149,67 @@
     
     v.status = null;
     v.lastStatusUpdate = null;
+
+    v.state = 'practice'; // 'practice', 'rec' or 'play'.
     
     // ******************
     // *** Functions: ***
     // ******************
+
+    f.getNextState = function()
+    {
+        // Hard-coded usage of keys 'o' ('rec') and 'p' ('play'):
+
+        var recPressed = v.cmdKeyStates['o'].pressed,
+            playPressed = v.cmdKeyStates['p'].pressed;
+
+        if(recPressed && playPressed)
+        {
+            return v.state; // Return last state (ignore both keys at once).
+        }
+
+        // At most one key is pressed.
+
+        if(!recPressed && !playPressed)
+        {
+            return v.state; // Return last state (only pressed are interesting).
+        }
+
+        // Either record or play key is pressed (only one of them).
+
+        if(v.cmdKeyStates['o'].changed)
+        {
+            // Record key got pressed since last loop iteration.
+
+            if(v.state === 'practice')
+            {
+                return 'rec';
+            }
+            if(v.state === 'rec')
+            {
+                return 'practice';
+            }
+            return v.state; // No change, if in play mode.
+        }
+        if(v.cmdKeyStates['p'].changed)
+        {
+            // Play key got pressed since last loop iteration.
+
+            if(v.state === 'practice')
+            {
+                return 'play';
+            }
+            if(v.state === 'play')
+            {
+                return 'practice';
+            }
+            return v.state; // No change, if in record mode.
+        }
+
+        // No key state changed since last loop iteration.
+
+        return v.state;
+    };
 
     /** Play note corresponding to key given.
      */
@@ -302,6 +359,11 @@
             str += '- - -';
         }
 
+        // Show current state ('practice', 'play' or 'record'):
+        //
+        str += ' ';
+        str += v.state.toUpperCase();
+
         // Show all currently pressed command key's commands:
         //
         buf = '';
@@ -329,6 +391,8 @@
     {
 
         f.updateCmd();
+
+        v.state = f.getNextState(); // TODO: Needs to be extended.
 
         f.updatePlaying();
         //
