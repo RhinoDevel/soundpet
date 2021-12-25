@@ -126,16 +126,26 @@
         ',': c.notes[1 * 12 +  0],
     };
 
+    c.keyToCmd = {
+        'o': 'rec',
+        'p': 'play'
+    };
+
     // ***************************
     // *** "Static" variables: ***
     // ***************************
+
+    v.cmdKeyStates = null; // Store current pressed-state of all command keys
+                           // and if pressed-state got changed after last game
+                           // loop iteration.
 
     v.pressed = []; // Used (and set) by f.updatePlaying().
     v.playing = null; // Set/unset by f.play() and f.stop().
                       // Read by f.updateStatus().
 
     v.noteplay = null;
-    v.keyboard = null;
+    v.keyboard = null; // Handles keys to play notes.
+    v.cmdboard = null; // Handles keys used for commands.
     
     v.status = null;
     v.lastStatusUpdate = null;
@@ -160,6 +170,27 @@
 
         v.playing = null;
     };
+
+    f.updateCmd = function()
+    {
+        var pressedKeys = v.cmdboard.getPressed(null),
+            key = null,
+            curPressed = false;
+
+        for(key in c.keyToCmd)
+        {
+            curPressed = pressedKeys.indexOf(key) !== -1;
+
+            // Is current pressed-state different from last pressed state?
+            //
+            v.cmdKeyStates[key].changed =
+                curPressed !== v.cmdKeyStates[key].pressed;
+
+            // Update pressed state from last to current:
+            //
+            v.cmdKeyStates[key].pressed = curPressed;
+        }
+    }
 
     /**
      * - Calls f.play() and f.stop().
@@ -249,7 +280,9 @@
     f.updateStatus = function()
     {
         var str = '',
-            timestamp = performance.now();
+            timestamp = performance.now(),
+            key = null,
+            buf = null;
 
         if(v.lastStatusUpdate !== null
             && timestamp - v.lastStatusUpdate < 100.0)
@@ -269,12 +302,34 @@
             str += '- - -';
         }
 
+        // Show all currently pressed command key's commands:
+        //
+        buf = '';
+        for(key in c.keyToCmd)
+        {
+            if(v.cmdKeyStates[key].pressed)
+            {
+                if(buf.length > 0)
+                {
+                    buf += ' '
+                }
+                buf += c.keyToCmd[key];
+            }
+        }
+        if(buf.length > 0)
+        {
+            str += ' ' + buf;
+        }
+
         v.status.textContent = str;
         v.lastStatusUpdate = timestamp;
     };
 
     f.update = function()
     {
+
+        f.updateCmd();
+
         f.updatePlaying();
         //
         // => v.playing holds currently played note's key (or one of them, some
@@ -290,9 +345,18 @@
     
     f.init = function(p)
     {
+        var buf = null;
+
+        v.cmdKeyStates = {};
+        for(buf in c.keyToCmd)
+        {
+            v.cmdKeyStates[buf] = {pressed: false, changed: false};
+        }
+
         v.noteplay = p.noteplay;
         v.keyboard = p.keyboard.create({whitelist: Object.keys(c.keyToNotes)});
-        
+        v.cmdboard = p.keyboard.create({whitelist: Object.keys(c.keyToCmd)});
+
         v.status = p.status;
 
         v.noteplay.init(
