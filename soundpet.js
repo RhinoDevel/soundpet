@@ -140,7 +140,7 @@
                            // and if pressed-state got changed after last game
                            // loop iteration.
 
-    v.pressed = []; // Used (and set) by f.updatePlaying().
+    v.pressed = []; // Used (and set) by f.updateInPracticeMode().
     v.playing = null; // Set/unset by f.play() and f.stop().
                       // Read by f.updateStatus().
 
@@ -266,7 +266,7 @@
     /**
      * - Calls f.play() and f.stop().
      */
-    f.updatePlaying = function()
+    f.updateInPracticeMode = function()
     {
         var pressed = v.keyboard.getPressed(2 + 1),
             buf = -1;
@@ -508,7 +508,7 @@
         }
         if(v.mode === 'practice')
         {
-            f.updatePlaying();
+            f.updateInPracticeMode();
             //
             // => v.playing holds currently played note's key (or one of them,
             //    some notes can be played with multiple keys).
