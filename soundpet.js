@@ -150,13 +150,13 @@
     v.status = null;
     v.lastStatusUpdate = null;
 
-    v.state = 'practice'; // 'practice', 'rec' or 'play'.
+    v.mode = 'practice'; // 'practice', 'rec' or 'play'.
     
     // ******************
     // *** Functions: ***
     // ******************
 
-    f.getNextState = function()
+    f.getNextMode = function()
     {
         // Hard-coded usage of keys 'o' ('rec') and 'p' ('play'):
 
@@ -165,14 +165,14 @@
 
         if(recPressed && playPressed)
         {
-            return v.state; // Return last state (ignore both keys at once).
+            return v.mode; // Return last mode (ignore both keys at once).
         }
 
         // At most one key is pressed.
 
         if(!recPressed && !playPressed)
         {
-            return v.state; // Return last state (only pressed are interesting).
+            return v.mode; // Return last mode (only pressed are interesting).
         }
 
         // Either record or play key is pressed (only one of them).
@@ -181,34 +181,34 @@
         {
             // Record key got pressed since last loop iteration.
 
-            if(v.state === 'practice')
+            if(v.mode === 'practice')
             {
                 return 'rec';
             }
-            if(v.state === 'rec')
+            if(v.mode === 'rec')
             {
                 return 'practice';
             }
-            return v.state; // No change, if in play mode.
+            return v.mode; // No change, if in play mode.
         }
         if(v.cmdKeyStates['p'].changed)
         {
             // Play key got pressed since last loop iteration.
 
-            if(v.state === 'practice')
+            if(v.mode === 'practice')
             {
                 return 'play';
             }
-            if(v.state === 'play')
+            if(v.mode === 'play')
             {
                 return 'practice';
             }
-            return v.state; // No change, if in record mode.
+            return v.mode; // No change, if in record mode.
         }
 
         // No key state changed since last loop iteration.
 
-        return v.state;
+        return v.mode;
     };
 
     /** Play note corresponding to key given.
@@ -359,7 +359,7 @@
             str += '- - -';
         }
 
-        // Show current state ('practice', 'play' or 'record'):
+        // Show current mode ('practice', 'play' or 'record'):
         //
         str += ' ';
         str += v.state.toUpperCase();
@@ -389,10 +389,55 @@
 
     f.update = function()
     {
+        var nextMode = null;
 
         f.updateCmd();
 
-        v.state = f.getNextState(); // TODO: Needs to be extended.
+        nextMode = f.getNextMode();
+        if(nextMode !== v.state)
+        {
+            switch(v.state)
+            {
+                case 'practice':
+                {
+                    if(nextMode === 'play')
+                    {
+                        break;
+                    }
+
+                    if(nextMode !== 'rec')
+                    {
+                        throw 'Error: Invalid change from practice mode!';
+                    }
+
+                    break;
+                }
+                case 'play':
+                {
+                    if(nextMode !== 'practice')
+                    {
+                        throw 'Error: Invalid change from play mode!';
+                    }
+
+                    break;
+                }
+                case 'rec':
+                {
+                    if(nextMode !== 'practice')
+                    {
+                        throw 'Error: Invalid change from record mode!';
+                    }
+
+                    break;
+                }
+
+                default:
+                {
+                    throw 'Error: Invalid mode given!';
+                }
+            }
+            v.mode = nextMode;
+        }
 
         f.updatePlaying();
         //
