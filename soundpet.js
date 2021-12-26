@@ -448,58 +448,59 @@
         --v.tuneSteps;
     };
 
+    f.updateMode = function()
+    {
+        var nextMode = f.getNextMode();
+
+        if(nextMode === v.mode)
+        {
+            return;
+        }
+        switch(v.mode)
+        {
+            case 'practice':
+            {
+                if(nextMode === 'play')
+                {
+                    break; // Nothing to do, here.
+                }
+                if(nextMode !== 'rec')
+                {
+                    throw 'Error: Invalid change from practice mode!';
+                }
+                break;
+            }
+            case 'play':
+            {
+                if(nextMode !== 'practice')
+                {
+                    throw 'Error: Invalid change from play mode!';
+                }
+                f.stopPlayMode();
+                break;
+            }
+            case 'rec':
+            {
+                if(nextMode !== 'practice')
+                {
+                    throw 'Error: Invalid change from record mode!';
+                }
+                break;
+            }
+
+            default:
+            {
+                throw 'Error: Invalid mode given!';
+            }
+        }
+        v.mode = nextMode;
+    };
+
     f.update = function()
     {
-        var nextMode = null;
-
         f.updateCmd();
 
-        nextMode = f.getNextMode();
-        if(nextMode !== v.mode)
-        {
-            switch(v.mode)
-            {
-                case 'practice':
-                {
-                    if(nextMode === 'play')
-                    {
-                        break;
-                    }
-
-                    if(nextMode !== 'rec')
-                    {
-                        throw 'Error: Invalid change from practice mode!';
-                    }
-
-                    break;
-                }
-                case 'play':
-                {
-                    if(nextMode !== 'practice')
-                    {
-                        throw 'Error: Invalid change from play mode!';
-                    }
-
-                    f.stopPlayMode();
-                    break;
-                }
-                case 'rec':
-                {
-                    if(nextMode !== 'practice')
-                    {
-                        throw 'Error: Invalid change from record mode!';
-                    }
-
-                    break;
-                }
-
-                default:
-                {
-                    throw 'Error: Invalid mode given!';
-                }
-            }
-            v.mode = nextMode;
-        }
+        f.updateMode();
 
         if(v.mode === 'play')
         {
