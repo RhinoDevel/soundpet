@@ -129,6 +129,7 @@
     c.keyToCmd = {
         'o': 'rec',
         'p': 'play'
+        //pause
     };
 
     // ***************************
@@ -152,6 +153,19 @@
 
     v.mode = 'practice'; // 'practice', 'rec' or 'play'.
     
+    v.tune = [
+	    [50, 0], // Length in multiples of step and note's index (255 = pause).
+		[50, 2], 
+		[50, 4], 
+		[50, 5], 
+		[100, 7],
+		[50, 9], 
+		[50, 11], 
+		[100, 12]
+	];
+    v.tuneIndex = -1;
+    v.tuneSteps = 0;
+
     // ******************
     // *** Functions: ***
     // ******************
@@ -387,6 +401,53 @@
         v.lastStatusUpdate = timestamp;
     };
 
+    f.stopPlayMode = function()
+    {
+        v.tuneIndex = -1;
+        v.tuneSteps = 0;
+
+        f.stop();
+    };
+
+    f.updateInPlayMode = function()
+    {
+        if(v.tuneSteps === 0)
+        {
+            // Current note/pause got played to the end.
+
+            ++v.tuneIndex; // Goes to next note/pause (if existing).
+            if(v.tuneIndex === v.tune.length)
+            {
+                // No other note/pause in tune.
+
+                f.stopPlayMode(); // Stop play (mode).
+                v.mode = 'practice'; // Go back to practice mode.
+                return;
+            }
+
+            // Set next note/pause as current note/pause:
+
+            v.tuneSteps = v.tune[v.tuneIndex][0];
+            
+            if(v.tune[v.tuneIndex][1] === 255)
+            {
+                f.stop(); // Just stop playback, because it is a pause.
+            }
+            else
+            {
+                // Not a pause, but a note.
+
+                // Start playing the note:
+                //
+                gamupet.noteplay.on(
+                    c.notes[v.tune[v.tuneIndex][1]][0],
+                    c.notes[v.tune[v.tuneIndex][1]][1],
+                    c.notes[v.tune[v.tuneIndex][1]][2]);
+            }
+        }
+        --v.tuneSteps;
+    };
+
     f.update = function()
     {
         var nextMode = null;
@@ -419,6 +480,7 @@
                         throw 'Error: Invalid change from play mode!';
                     }
 
+                    f.stopPlayMode();
                     break;
                 }
                 case 'rec':
@@ -439,12 +501,22 @@
             v.mode = nextMode;
         }
 
-        f.updatePlaying();
-        //
-        // => v.playing holds currently played note's key (or one of them, some
-        //    notes can be played with multiple keys).
-        //
-        // => v.pressed holds currently pressed key/keys.
+        if(v.mode === 'play')
+        {
+            f.updateInPlayMode();
+            return;
+        }
+        if(v.mode === 'practice')
+        {
+            f.updatePlaying();
+            //
+            // => v.playing holds currently played note's key (or one of them,
+            //    some notes can be played with multiple keys).
+            //
+            // => v.pressed holds currently pressed key/keys.
+
+            return;
+        }
     };
 
     f.draw = function()
