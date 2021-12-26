@@ -362,7 +362,7 @@
         // Show current mode ('practice', 'play' or 'record'):
         //
         str += ' ';
-        str += v.state.toUpperCase();
+        str += v.mode.toUpperCase();
 
         // Show all currently pressed command key's commands:
         //
@@ -394,9 +394,9 @@
         f.updateCmd();
 
         nextMode = f.getNextMode();
-        if(nextMode !== v.state)
+        if(nextMode !== v.mode)
         {
-            switch(v.state)
+            switch(v.mode)
             {
                 case 'practice':
                 {
