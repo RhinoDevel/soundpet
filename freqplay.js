@@ -25,7 +25,7 @@
     f.init = function()
     {
         var osciParams = {
-                type: 'square',
+                type: 'square', // sine, sawtooth, triangle, custom.
                 channelCount: 1,
                 channelCountMode: 'explicit',
                 frequency: 0 // Hz
