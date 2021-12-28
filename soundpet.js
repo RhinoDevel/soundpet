@@ -461,12 +461,11 @@
 
         // There is at least one note recorded.
 
+        ++v.tune[v.tuneIndex][0]; // Add a recording (time) step.
+
         if(v.tune[v.tuneIndex][1] === playingNoteIndex)
         {
-            // Still the same note playing as in last loop iteration.
-
-            ++v.tune[v.tuneIndex][0]; // Add a recording (time) step.
-            return;
+            return; // Still the same note playing as in last loop iteration.
         }
 
         // Another note/pause playing than last loop iteration.
