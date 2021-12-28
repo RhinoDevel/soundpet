@@ -151,6 +151,7 @@
     
     v.status = null;
     v.lastStatusUpdate = null;
+    v.lastStatusCall = null;
 
     v.mode = 'practice'; // 'practice', 'rec' or 'play'.
     
@@ -361,9 +362,16 @@
         if(v.lastStatusUpdate !== null
             && timestamp - v.lastStatusUpdate < 100.0)
         {
+            v.lastStatusCall = timestamp;
             return;
         }
 
+        buf = timestamp - v.lastStatusCall;
+        str += String(buf) + 'ms';
+        str += ' ';
+        str += String(Math.floor(1000.0 / buf)) + 'Hz';
+
+        str += ' ';
         if(v.playing !== null)
         {
             str += v.playing 
@@ -402,6 +410,7 @@
 
         v.status.textContent = str;
         v.lastStatusUpdate = timestamp;
+        v.lastStatusCall = timestamp;
     };
 
     f.stopPlayMode = function()
