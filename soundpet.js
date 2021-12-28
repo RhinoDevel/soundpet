@@ -63,6 +63,7 @@
     // ********************
 
     c.startOctave = 4;
+    c.pause = 255; // Pseudo-index for pause.
     c.notes = [
         ['C', '', c.startOctave],
         ['C', '#', c.startOctave],
@@ -140,7 +141,7 @@
                            // and if pressed-state got changed after last game
                            // loop iteration.
 
-    v.pressed = []; // Used (and set) by f.updateInPracticeMode().
+    v.pressed = []; // Used (and set) by f.updatePlayFromKeys().
     v.playing = null; // Set/unset by f.play() and f.stop().
                       // Read by f.updateStatus().
 
@@ -153,6 +154,8 @@
 
     v.mode = 'practice'; // 'practice', 'rec' or 'play'.
     
+    // TODO: Add tune maximum length (maybe as parameter for init.)!
+
     v.tune = [
 	    [50, 0], // Length in multiples of step and note's index (255 = pause).
 		[50, 2], 
@@ -266,7 +269,7 @@
     /**
      * - Calls f.play() and f.stop().
      */
-    f.updateInPracticeMode = function()
+    f.updatePlayFromKeys = function()
     {
         var pressed = v.keyboard.getPressed(2 + 1),
             buf = -1;
@@ -409,6 +412,69 @@
         f.stop();
     };
 
+    f.stopRecMode = function()
+    {
+        if(v.tuneIndex !== -1/*v.tune.length > 0*/)
+        {
+            if(v.tune[v.tuneIndex][1] === c.pause) // A pause.
+            {
+                v.tune.pop(); // Remove trailing pause (by definition).
+            }
+            else // A note.
+            {
+                ++v.tune[v.tuneIndex][0]; // Avoid note length zero.
+            }
+            v.tuneIndex = -1;
+        }
+    };
+    f.updateInRecMode = function()
+    {
+        var playingNoteIndex = null;
+
+        f.updatePlayFromKeys();
+        //
+        // => v.playing holds currently played note's key (or one of them,
+        //    some notes can be played with multiple keys).
+        //
+        // => v.pressed holds currently pressed key/keys.
+
+        playingNoteIndex = v.playing === null
+            ? c.pause
+            : c.notes.indexOf(c.keyToNotes[v.playing]);
+
+        if(v.tuneIndex === -1)
+        {
+            // Nothing recorded, yet.
+
+            if(playingNoteIndex === c.pause)
+            {
+                return; // Still waiting for first note (key press).
+                        // Never start with a pause (by definition).
+            }
+
+            // Not a pause, but a real note, start recording:
+
+            ++v.tuneIndex;
+            v.tune = [[0, playingNoteIndex]];
+            return;
+        }
+
+        // There is at least one note recorded.
+
+        if(v.tune[v.tuneIndex][1] === playingNoteIndex)
+        {
+            // Still the same note playing as in last loop iteration.
+
+            ++v.tune[v.tuneIndex][0]; // Add a recording (time) step.
+            return;
+        }
+
+        // Another note/pause playing than last loop iteration.
+
+        ++v.tuneIndex;
+        v.tune.push([0, playingNoteIndex]);
+    };
+
     f.updateInPlayMode = function()
     {
         if(v.tuneSteps === 0)
@@ -429,7 +495,7 @@
 
             v.tuneSteps = v.tune[v.tuneIndex][0];
             
-            if(v.tune[v.tuneIndex][1] === 255)
+            if(v.tune[v.tuneIndex][1] === c.pause)
             {
                 f.stop(); // Just stop playback, because it is a pause.
             }
@@ -446,6 +512,16 @@
             }
         }
         --v.tuneSteps;
+    };
+
+    f.updateInPracticeMode = function()
+    {
+        f.updatePlayFromKeys();
+        //
+        // => v.playing holds currently played note's key (or one of them,
+        //    some notes can be played with multiple keys).
+        //
+        // => v.pressed holds currently pressed key/keys.
     };
 
     f.updateMode = function()
@@ -485,6 +561,7 @@
                 {
                     throw 'Error: Invalid change from record mode!';
                 }
+                f.stopRecMode();
                 break;
             }
 
@@ -510,12 +587,11 @@
         if(v.mode === 'practice')
         {
             f.updateInPracticeMode();
-            //
-            // => v.playing holds currently played note's key (or one of them,
-            //    some notes can be played with multiple keys).
-            //
-            // => v.pressed holds currently pressed key/keys.
-
+            return;
+        }
+        if(v.mode === 'rec')
+        {
+            f.updateInRecMode();
             return;
         }
     };
