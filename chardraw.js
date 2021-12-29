@@ -108,9 +108,38 @@
         f.pixelsAt(charX, charY, pixels);
     };
 
+    f.petMask = function(mask, graphicsMode)
+    {
+        var i = 0,
+            charX = -1,
+            charY = -1,
+            charI = -1,
+            charCount = -1,
+            screenCode = -1;
+
+        while(i < mask.length)
+        {
+            charY = mask[i];
+            ++i;
+            charX = mask[i];
+            ++i;
+            charCount = mask[i];
+            ++i;
+
+            for(charI = 0;charI < charCount; ++charI)
+            {
+                screenCode = mask[i];
+                ++i;
+
+                f.petAt(charX + charI, charY, graphicsMode, screenCode);
+            }
+        }
+    };
+
     o.init = f.init;
     o.at = f.at;
     o.petAt = f.petAt;
+    o.petMask = f.petMask;
 
     gamupet.chardraw = o;
 }());
