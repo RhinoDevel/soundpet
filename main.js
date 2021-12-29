@@ -128,6 +128,7 @@
                 freqplay: gamupet.freqplay,
                 noteplay: gamupet.noteplay,
                 keyboard: gamupet.keyboard,
+                chardraw: gamupet.chardraw,
 
                 status: v.soundpetStatus
             });

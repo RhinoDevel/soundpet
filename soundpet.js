@@ -126,6 +126,39 @@
         //
         ',': c.notes[1 * 12 +  0],
     };
+    c.keyToDraw = {
+        '2': [3, 4, 50], // charX, charY, screenCode
+        '3': [5, 4, 51],
+        '5': [9, 4, 53],
+        '6': [11, 4, 54],
+        '7': [13, 4, 55],
+
+        'q': [2, 6, 17],
+        'w': [4, 6, 23],
+        'e': [6, 6, 5],
+        'r': [8, 6, 18],
+        't': [10, 6, 20],
+        'z': [12, 6, 26],
+        'u': [14, 6, 21],
+        //
+        'i': [16, 6, 9],
+
+        's': [5, 8, 19],
+        'd': [7, 8, 4],
+        'g': [11, 8, 7],
+        'h': [13, 8, 8],
+        'j': [15, 8, 10],
+
+        'y': [4, 10, 25],
+        'x': [6, 10, 24],
+        'c': [8, 10, 3],
+        'v': [10, 10, 22],
+        'b': [12, 10, 2],
+        'n': [14, 10, 14],
+        'm': [16, 10, 13],
+        //
+        ',': [18, 10, 44]
+    };
 
     c.keyToCmd = {
         'o': 'rec',
@@ -148,6 +181,7 @@
     v.noteplay = null;
     v.keyboard = null; // Handles keys to play notes.
     v.cmdboard = null; // Handles keys used for commands.
+    v.chardraw = null;
     
     v.status = null;
     v.lastStatusUpdate = null;
@@ -606,6 +640,19 @@
 
     f.draw = function()
     {
+        var buf = null;
+
+        // TODO: Debugging:
+        //
+        for(buf in c.keyToDraw)
+        {
+            v.chardraw.petAt(
+                c.keyToDraw[buf][0],
+                c.keyToDraw[buf][1],
+                true, // Hard-coded
+                c.keyToDraw[buf][2]);
+        }
+
         f.updateStatus();
     };
     
@@ -622,6 +669,7 @@
         v.noteplay = p.noteplay;
         v.keyboard = p.keyboard.create({whitelist: Object.keys(c.keyToNotes)});
         v.cmdboard = p.keyboard.create({whitelist: Object.keys(c.keyToCmd)});
+        v.chardraw = p.chardraw;
 
         v.status = p.status;
 
