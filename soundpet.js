@@ -367,7 +367,7 @@
         }
 
         buf = timestamp - v.lastStatusCall;
-        str += String(buf) + 'ms';
+        str += 'Draw: ' + String(buf) + 'ms';
         str += ' ';
         str += String(Math.floor(1000.0 / buf)) + 'Hz';
 
