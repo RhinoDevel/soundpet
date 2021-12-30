@@ -126,7 +126,7 @@
         //
         ',': c.notes[1 * 12 +  0],
     };
-    c.keyToDraw = {
+    c.keyToNotesDraw = {
         '2': [3, 4, 50], // charX, charY, screenCode
         '3': [5, 4, 51],
         '5': [9, 4, 53],
@@ -164,6 +164,10 @@
         'o': 'rec',
         'p': 'play'
         //pause
+    };
+    c.keyToCmdDraw = {
+        'o': [31, 3, 15], // charX, charY, screenCode
+        'p': [31, 5, 16]
     };
 
     // ***************************
@@ -659,17 +663,36 @@
     {
         var buf = null;
 
-        for(buf in c.keyToDraw)
+        for(buf in c.keyToNotesDraw)
         {
             v.chardraw.petAt(
-                c.keyToDraw[buf][0],
-                c.keyToDraw[buf][1],
+                c.keyToNotesDraw[buf][0],
+                c.keyToNotesDraw[buf][1],
                 true, // Hard-coded
-                c.keyToDraw[buf][2]
+                c.keyToNotesDraw[buf][2]
                     + (buf === v.playing
                         ? 128 // Reverse 
                         : 0));
         }
+
+        // Hard-coded usage of keys 'o' ('rec') and 'p' ('play'):
+        //
+        v.chardraw.petAt(
+            c.keyToCmdDraw['o'][0],
+            c.keyToCmdDraw['o'][1],
+            true, // Hard-coded
+            c.keyToCmdDraw['o'][2]
+                + (v.mode === 'rec' 
+                    ? 128 // Reverse
+                    : 0));
+        v.chardraw.petAt(
+            c.keyToCmdDraw['p'][0],
+            c.keyToCmdDraw['p'][1],
+            true, // Hard-coded
+            c.keyToCmdDraw['p'][2]
+                + (v.mode === 'play' 
+                    ? 128 // Reverse
+                    : 0));
 
         f.updateStatus();
     };
