@@ -642,15 +642,16 @@
     {
         var buf = null;
 
-        // TODO: Debugging:
-        //
         for(buf in c.keyToDraw)
         {
             v.chardraw.petAt(
                 c.keyToDraw[buf][0],
                 c.keyToDraw[buf][1],
                 true, // Hard-coded
-                c.keyToDraw[buf][2]);
+                c.keyToDraw[buf][2]
+                    + (buf === v.playing
+                        ? 128 // Reverse 
+                        : 0));
         }
 
         f.updateStatus();
