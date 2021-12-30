@@ -63,7 +63,7 @@
         else
         {
             outerDim.width = 640;  // These are
-            outerDim.height = 480; // sample values.
+            outerDim.height = 400; // sample values.
         }
 
         container = f.createContainer(outerDim.width, outerDim.height);
