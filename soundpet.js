@@ -273,6 +273,26 @@
         v.playing = key;
     };
 
+    f.getFirstKeyByNote = function(noteIndex)
+    {
+        var key = null,
+            note = c.notes[noteIndex];
+
+        for(key in c.keyToNotes)
+        {
+            if(c.keyToNotes[key] === note)
+            {
+                return key;
+            }
+        }
+        throw 'Error: Key for note with given index not found!';
+    };
+
+    f.playByNote = function(noteIndex)
+    {
+        f.play(f.getFirstKeyByNote(noteIndex));   
+    }
+
     f.stop = function()
     {
         gamupet.noteplay.off();
@@ -547,10 +567,7 @@
 
                 // Start playing the note:
                 //
-                gamupet.noteplay.on(
-                    c.notes[v.tune[v.tuneIndex][1]][0],
-                    c.notes[v.tune[v.tuneIndex][1]][1],
-                    c.notes[v.tune[v.tuneIndex][1]][2]);
+                f.playByNote(v.tune[v.tuneIndex][1]);
             }
         }
         --v.tuneSteps;
