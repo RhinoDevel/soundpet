@@ -46,8 +46,39 @@
 
         return retVal;
     };
+	
+	f.createAndAppend = function(tagName, parentNode, flexOrder, flexDir)
+    {
+        var retVal = document.createElement(tagName);
+
+        if(typeof flexOrder === 'number')
+        {
+            retVal.style.order = String(flexOrder);
+        }
+        if(typeof flexDir === 'string')
+        {
+            retVal.style.display = 'flex';
+            retVal.style['flex-direction'] = flexDir;
+        }
+
+        parentNode.appendChild(retVal);
+
+        return retVal;
+    };
+	
+	f.clearContent = function(node)
+    {
+        while(node.firstChild !== null)
+        {
+            node.removeChild(node.firstChild);
+        }
+    };
 
     o.createCanvas = f.createCanvas;
+	
+	o.createAndAppend = f.createAndAppend;
+
+    o.clearContent = f.clearContent;
 
     gamupet.ele = o;
 }());
