@@ -10,69 +10,63 @@
     var f = {}, v = {};
 
     v.soundpetStatus = null;
-
-    f.prepareBodyForFullScreen = function()
-    {
-        document.body.style.width = '100%';
-        document.body.style.height = '100%';
-        document.body.style.border = '0px none';
-        document.body.style.padding = '0px';
-        document.body.style.margin = '0px';
-    };
-
-    f.createContainer = function(width, height)
-    {
-        var retVal = document.createElement('div');
-
-        retVal.style.width = String(width) + 'px';
-        retVal.style.height = String(height) + 'px';
-        retVal.style['background-color'] = 'lightgray';
-        retVal.style.display = 'flex';
-        retVal.style['justify-content'] = 'center';
-        retVal.style['align-items'] = 'center';
-
-        return retVal;
-    };
-
-    f.createEle = function()
-    {
-        var retVal = document.createElement('div');
-        
-        retVal.style.order = String(1);
-        retVal.style.position = 'relative';
-
-        return retVal;
-    };
+	v.soundpetTune = null;
 
     /**
      * - Returns canvas.
      */
     f.initEles = function()
     {
-        var ele = f.createEle(),
+        var mainEle = null,
+            ele = null,
             container = null,
-            outerDim = {};
+            outerDim = {width: 640, height: 480}, // These are sample values.
+            tuneDim = {width: '38ch', height: '48ch'}; // These are sample values.
 
-        if(gamupet.c.fullscreen)
-        {
-            f.prepareBodyForFullScreen();
+        mainEle = gamupet.ele.createAndAppend(
+            'div',
+            document.body,
+            null,
+            'row',
+            {'flex-wrap': 'wrap'});
 
-            outerDim.width = document.body.clientWidth;
-            outerDim.height = document.body.clientHeight;
-        }
-        else
-        {
-            outerDim.width = 640;  // These are
-            outerDim.height = 400; // sample values.
-        }
+        container = gamupet.ele.createAndAppend(
+            'div',
+            mainEle,
+            1,
+            'column'/*'row'*/,
+            {
+                width: String(outerDim.width) + 'px',
+                height: String(outerDim.height) + 'px',
+                'background-color': 'lightgray',
+                'justify-content': 'center',
+                'align-items': 'center'
+            });
 
-        container = f.createContainer(outerDim.width, outerDim.height);
+        ele = gamupet.ele.createAndAppend(
+            'div',
+            container,
+            1,
+            null,
+            {position: 'relative'});
 
-        container.appendChild(ele);
-        document.body.appendChild(container);
+        mainEle.appendChild(container);
 
-        v.soundpetStatus = document.createElement('div');
-        document.body.appendChild(v.soundpetStatus);
+        v.soundpetStatus = gamupet.ele.createAndAppend(
+            'div', mainEle, 2, null, null);
+
+		v.soundpetTune = gamupet.ele.createAndAppend(
+            'div',
+            mainEle,
+            3,
+            'column',
+            {
+                border: '1px solid black',
+		        'overflow-y': 'scroll',
+		        'font-family': 'monospace',
+		        width: tuneDim.width,
+		        height: tuneDim.height
+            });
 
         return gamupet.room.init(
             {
@@ -129,8 +123,10 @@
                 noteplay: gamupet.noteplay,
                 keyboard: gamupet.keyboard,
                 chardraw: gamupet.chardraw,
+				ele: gamupet.ele,
 
-                status: v.soundpetStatus
+                status: v.soundpetStatus,
+				tuneEle: v.soundpetTune
             });
 
         gamupet.gameloop.init(

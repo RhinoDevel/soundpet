@@ -12,8 +12,6 @@
 
     o.freq = 60.0; // Hz
 
-    o.fullscreen = false;
-
     o.dim = {};
 
     o.dim.screen = { width: 320, height: 200 }; // Commodore screen dimensions.

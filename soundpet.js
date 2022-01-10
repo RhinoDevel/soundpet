@@ -186,10 +186,13 @@
     v.keyboard = null; // Handles keys to play notes.
     v.cmdboard = null; // Handles keys used for commands.
     v.chardraw = null;
+	v.ele = null;
     
     v.status = null;
     v.lastStatusUpdate = null;
     v.lastStatusCall = null;
+	
+	v.tuneEle = null;
 
     v.mode = 'practice'; // 'practice', 'rec' or 'play'.
     
@@ -697,6 +700,28 @@
         f.updateStatus();
     };
     
+	f.addNoteEle = function(entry, i)
+	{
+		var lineEle = v.ele.createAndAppend(
+                'div',
+                v.tuneEle,
+                i,
+                'row',
+                {
+                    'background-color': i % 2 === 0
+                                            ? 'lightblue' : 'lightcyan'
+                });
+			
+		lineEle.textContent = '' + entry[0] + ' ' + entry[1];
+	};
+	
+	f.updateTuneEle = function()
+	{
+		v.ele.clearContent(v.tuneEle);
+		
+		v.tune.forEach(f.addNoteEle);
+	};
+	
     f.init = function(p)
     {
         var buf = null;
@@ -711,14 +736,19 @@
         v.keyboard = p.keyboard.create({whitelist: Object.keys(c.keyToNotes)});
         v.cmdboard = p.keyboard.create({whitelist: Object.keys(c.keyToCmd)});
         v.chardraw = p.chardraw;
+		v.ele = p.ele;
 
         v.status = p.status;
-
+		
+		v.tuneEle = p.tuneEle;	
+		
         v.noteplay.init(
             {
                 octaveCount: 8,
                 freqplay: p.freqplay
             });
+			
+		f.updateTuneEle();
     };
 
     o.init = f.init;

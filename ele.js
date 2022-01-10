@@ -4,12 +4,16 @@
 /** To be run during page load to augment global gamupet object with new
  *  property called ele, which is an object holding functions to create
  *  and handle HTML elements.
+ * 
+ *  * Needs/uses global gamupet object's 'obj' property.
  */
 (function() // IIFE
 {
     'use strict';
 
-    var f = {}, o = {};
+    var g = gamupet, // Shortcut
+        f = {},
+        o = {};
 
     f.createCanvas = function(t, l, w, h, cW, cH)
     {
@@ -46,8 +50,23 @@
 
         return retVal;
     };
-	
-	f.createAndAppend = function(tagName, parentNode, flexOrder, flexDir)
+
+    /**
+     * - Returns given element.
+     */
+    f.addStyles = function(ele, styles)
+    {
+        g.obj.forEach(
+            styles,
+            function(val, key)
+            {
+                ele.style[key] = val;
+            });
+        return ele;
+    };
+
+	f.createAndAppend = function(
+        tagName, parentNode, flexOrder, flexDir, styles)
     {
         var retVal = document.createElement(tagName);
 
@@ -59,6 +78,10 @@
         {
             retVal.style.display = 'flex';
             retVal.style['flex-direction'] = flexDir;
+        }
+        if(g.obj.isObj(styles))
+        {
+            f.addStyles(retVal, styles);
         }
 
         parentNode.appendChild(retVal);
@@ -79,6 +102,8 @@
 	o.createAndAppend = f.createAndAppend;
 
     o.clearContent = f.clearContent;
+
+    o.addStyles = f.addStyles;
 
     gamupet.ele = o;
 }());
