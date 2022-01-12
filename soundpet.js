@@ -198,6 +198,8 @@
     
     // TODO: Add tune maximum length (maybe as parameter for init.)!
 
+    // TODO: Add note/pause maximum length (see PET/CBM)!
+
     v.tune = [
 	    [50, 0], // Length in multiples of step and note's index (255 = pause).
 		[50, 2], 
