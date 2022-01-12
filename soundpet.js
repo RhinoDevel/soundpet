@@ -705,6 +705,22 @@
         f.updateStatus();
     };
     
+    f.getNoteDescription = function(entry, i)
+	{
+		var note = entry[1] === c.pause ? ['-', '', '-'] : c.notes[entry[1]],
+            retVal = '';
+
+        retVal += note[0];
+        retVal += note[1].length === 0 ? '-' : note[1];
+        retVal += String(note[2]);
+
+        retVal += ' ';
+
+        retVal += String(entry[0]);
+
+        return retVal;
+	};
+
 	f.addNoteEle = function(entry, i)
 	{
 		var lineEle = v.ele.createAndAppend(
@@ -717,7 +733,7 @@
                                             ? 'lightblue' : 'lightcyan'
                 });
 			
-		lineEle.textContent = '' + entry[0] + ' ' + entry[1];
+		lineEle.textContent = f.getNoteDescription(entry, i);
 	};
 	
 	f.updateTuneEle = function()
