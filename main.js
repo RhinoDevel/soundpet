@@ -9,8 +9,10 @@
 
     var f = {}, v = {};
 
-    v.soundpetStatus = null;
-	v.soundpetTune = null;
+    v.ele = {};
+
+    v.ele.status = null;
+	v.ele.tune = null;
 
     /**
      * - Returns canvas.
@@ -52,10 +54,10 @@
 
         mainEle.appendChild(container);
 
-        v.soundpetStatus = gamupet.ele.createAndAppend(
+        v.ele.status = gamupet.ele.createAndAppend(
             'div', mainEle, 2, null, null);
 
-		v.soundpetTune = gamupet.ele.createAndAppend(
+		v.ele.tune = gamupet.ele.createAndAppend(
             'div',
             mainEle,
             3,
@@ -125,8 +127,8 @@
                 chardraw: gamupet.chardraw,
 				ele: gamupet.ele,
 
-                status: v.soundpetStatus,
-				tuneEle: v.soundpetTune
+                status: v.ele.status,
+				tuneEle: v.ele.tune
             });
 
         gamupet.gameloop.init(
