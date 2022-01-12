@@ -210,6 +210,7 @@
 	];
     v.tuneIndex = -1;
     v.tuneSteps = 0;
+    v.tuneNeedsRedraw = true;
 
     // ******************
     // *** Functions: ***
@@ -495,6 +496,8 @@
                 ++v.tune[v.tuneIndex][0]; // Avoid note length zero.
             }
             v.tuneIndex = -1;
+
+            v.tuneNeedsRedraw = true;
         }
     };
     f.updateInRecMode = function()
@@ -697,6 +700,8 @@
                     ? 128 // Reverse
                     : 0));
 
+        f.updateTuneEle();
+
         f.updateStatus();
     };
     
@@ -717,9 +722,16 @@
 	
 	f.updateTuneEle = function()
 	{
+        if(!v.tuneNeedsRedraw)
+        {
+            return;
+        }
+
 		v.ele.clearContent(v.tuneEle);
 		
 		v.tune.forEach(f.addNoteEle);
+
+        v.tuneNeedsRedraw = false;
 	};
 	
     f.init = function(p)
@@ -747,8 +759,6 @@
                 octaveCount: 8,
                 freqplay: p.freqplay
             });
-			
-		f.updateTuneEle();
     };
 
     o.init = f.init;
