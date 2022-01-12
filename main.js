@@ -18,10 +18,8 @@
     f.initEles = function()
     {
         var mainEle = null,
-            screenInner = null,
-            screenOuter = null,
-            outerDim = {width: 480, height: 300}, // These are sample values.
-            tuneDim = {width: '38ch', height: '48ch'}; // These are sample values.
+            screenInnerEle = null,
+            screenOuterEle = null;
 
         mainEle = gamupet.ele.createAndAppend(
             'div',
@@ -30,29 +28,29 @@
             'row',
             {'flex-wrap': 'wrap'});
 
-        screenOuter = gamupet.ele.createAndAppend(
+        screenOuterEle = gamupet.ele.createAndAppend(
             'div',
             mainEle,
             1,
             'column'/*'row'*/,
             {
-                width: String(outerDim.width) + 'px',
-                height: String(outerDim.height) + 'px',
+                width: String(gamupet.c.dim.screenOuter.width) + 'px',
+                height: String(gamupet.c.dim.screenOuter.height) + 'px',
                 'background-color': 'lightgray',
                 'justify-content': 'center',
                 'align-items': 'center',
-                'margin-right': '0.4ch',
-                'margin-bottom': '0.4ch'
+                'margin-right': gamupet.c.margin,
+                'margin-bottom': gamupet.c.margin
             });
 
-        screenInner = gamupet.ele.createAndAppend(
+        screenInnerEle = gamupet.ele.createAndAppend(
             'div',
-            screenOuter,
+            screenOuterEle,
             1,
             null,
             {position: 'relative'});
 
-        mainEle.appendChild(screenOuter);
+        mainEle.appendChild(screenOuterEle);
 
 		v.ele.tune = gamupet.ele.createAndAppend(
             'div',
@@ -63,10 +61,10 @@
                 border: '1px solid black',
 		        'overflow-y': 'scroll',
 		        'font-family': 'monospace',
-		        width: tuneDim.width,
-		        height: tuneDim.height,
-                'margin-right': '0.4ch',
-                'margin-bottom': '0.4ch'
+		        width: gamupet.c.dim.tune.width,
+		        height: gamupet.c.dim.tune.height,
+                'margin-right': gamupet.c.margin,
+                'margin-bottom': gamupet.c.margin
             });
 
         v.ele.status = gamupet.ele.createAndAppend(
@@ -76,10 +74,10 @@
             {
                 dim: {
                     inner: gamupet.c.dim.screen,
-                    outer: outerDim
+                    outer: gamupet.c.dim.screenOuter
                 },
                 createCanvas: gamupet.ele.createCanvas,
-                ele: screenInner,
+                ele: screenInnerEle,
                 backgroundColor: 'rgba('
                         + String(gamupet.c.pix.off.r)
                         + ',' + String(gamupet.c.pix.off.g)

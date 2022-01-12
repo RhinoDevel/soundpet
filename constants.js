@@ -12,9 +12,13 @@
 
     o.freq = 60.0; // Hz
 
+    o.margin = '0.4ch';
+
     o.dim = {};
 
     o.dim.screen = { width: 320, height: 200 }; // Commodore screen dimensions.
+    o.dim.screenOuter = {width: 480, height: 300};
+    o.dim.tune = {width: '38ch', height: '48ch'};
 
     o.dim.char = { width: 8, height: 8 }; // Commodore character dimensions.
 
