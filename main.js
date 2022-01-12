@@ -11,18 +11,16 @@
 
     v.ele = {};
 
+    v.ele.screen = null;
 	v.ele.tune = null;
     v.ele.status = null;
 
-    /**
-     * - Returns canvas.
-     */
     f.initEles = function()
     {
         var mainEle = null,
-            ele = null,
-            container = null,
-            outerDim = {width: 640, height: 480}, // These are sample values.
+            screenInner = null,
+            screenOuter = null,
+            outerDim = {width: 480, height: 300}, // These are sample values.
             tuneDim = {width: '38ch', height: '48ch'}; // These are sample values.
 
         mainEle = gamupet.ele.createAndAppend(
@@ -32,7 +30,7 @@
             'row',
             {'flex-wrap': 'wrap'});
 
-        container = gamupet.ele.createAndAppend(
+        screenOuter = gamupet.ele.createAndAppend(
             'div',
             mainEle,
             1,
@@ -47,14 +45,14 @@
                 'margin-bottom': '0.4ch'
             });
 
-        ele = gamupet.ele.createAndAppend(
+        screenInner = gamupet.ele.createAndAppend(
             'div',
-            container,
+            screenOuter,
             1,
             null,
             {position: 'relative'});
 
-        mainEle.appendChild(container);
+        mainEle.appendChild(screenOuter);
 
 		v.ele.tune = gamupet.ele.createAndAppend(
             'div',
@@ -74,14 +72,14 @@
         v.ele.status = gamupet.ele.createAndAppend(
             'div', mainEle, 3, null, null);
 
-        return gamupet.room.init(
+        v.ele.screen = gamupet.room.init(
             {
                 dim: {
                     inner: gamupet.c.dim.screen,
                     outer: outerDim
                 },
                 createCanvas: gamupet.ele.createCanvas,
-                ele: ele,
+                ele: screenInner,
                 backgroundColor: 'rgba('
                         + String(gamupet.c.pix.off.r)
                         + ',' + String(gamupet.c.pix.off.g)
@@ -93,11 +91,11 @@
 
     f.onLoad = function()
     {
-        var canvas = f.initEles();
+        f.initEles();
 
         gamupet.chardraw.init(
             {
-                canvas: canvas,
+                canvas: v.ele.screen,
                 dim: {
                     char: gamupet.c.dim.char
                 },
