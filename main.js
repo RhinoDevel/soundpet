@@ -11,8 +11,8 @@
 
     v.ele = {};
 
-    v.ele.status = null;
 	v.ele.tune = null;
+    v.ele.status = null;
 
     /**
      * - Returns canvas.
@@ -42,7 +42,9 @@
                 height: String(outerDim.height) + 'px',
                 'background-color': 'lightgray',
                 'justify-content': 'center',
-                'align-items': 'center'
+                'align-items': 'center',
+                'margin-right': '0.4ch',
+                'margin-bottom': '0.4ch'
             });
 
         ele = gamupet.ele.createAndAppend(
@@ -54,21 +56,23 @@
 
         mainEle.appendChild(container);
 
-        v.ele.status = gamupet.ele.createAndAppend(
-            'div', mainEle, 2, null, null);
-
 		v.ele.tune = gamupet.ele.createAndAppend(
             'div',
             mainEle,
-            3,
+            2,
             'column',
             {
                 border: '1px solid black',
 		        'overflow-y': 'scroll',
 		        'font-family': 'monospace',
 		        width: tuneDim.width,
-		        height: tuneDim.height
+		        height: tuneDim.height,
+                'margin-right': '0.4ch',
+                'margin-bottom': '0.4ch'
             });
+
+        v.ele.status = gamupet.ele.createAndAppend(
+            'div', mainEle, 3, null, null);
 
         return gamupet.room.init(
             {
