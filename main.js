@@ -1,6 +1,8 @@
 
 // (c) Marcel Timm, RhinoDevel, 2021
 
+/* global gamupet */
+
 /** To be executed as last JavaScript file on page load.
  */
 (function() // IIFE
@@ -12,7 +14,7 @@
     v.ele = {};
 
     v.ele.screen = null;
-	v.ele.tune = null;
+    v.ele.tune = null;
     v.ele.status = null;
 
     f.initEles = function()
@@ -52,17 +54,17 @@
 
         mainEle.appendChild(screenOuterEle);
 
-		v.ele.tune = gamupet.ele.createAndAppend(
+        v.ele.tune = gamupet.ele.createAndAppend(
             'div',
             mainEle,
             2,
             'column',
             {
                 border: '1px solid black',
-		        'overflow-y': 'scroll',
-		        'font-family': 'monospace',
-		        width: gamupet.c.dim.tune.width,
-		        height: gamupet.c.dim.tune.height,
+                'overflow-y': 'scroll',
+                'font-family': 'monospace',
+                width: gamupet.c.dim.tune.width,
+                height: gamupet.c.dim.tune.height,
                 'margin-right': gamupet.c.margin,
                 'margin-bottom': gamupet.c.margin
             });
@@ -125,10 +127,10 @@
                 noteplay: gamupet.noteplay,
                 keyboard: gamupet.keyboard,
                 chardraw: gamupet.chardraw,
-				ele: gamupet.ele,
+                ele: gamupet.ele,
 
                 status: v.ele.status,
-				tuneEle: v.ele.tune
+                tuneEle: v.ele.tune
             });
 
         gamupet.gameloop.init(

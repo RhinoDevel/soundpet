@@ -1,6 +1,8 @@
 
 // (c) Marcel Timm, RhinoDevel, 2021
 
+/* global gamupet */
+
 // Recording export format:
 //
 /*
@@ -35,17 +37,17 @@
 
         ['C', '', 4 + 2]
     ],
-	
-	tune: [
-	    [50, 0], // Length in multiples of step and note's index (255 = pause).
-		[50, 2], 
-		[50, 4], 
-		[50, 5], 
-		[100, 7], 
-		[50, 9], 
-		[50, 11], 
-		[100, 12]
-	]
+    
+    tune: [
+        [50, 0], // Length in multiples of step and note's index (255 = pause).
+        [50, 2], 
+        [50, 4], 
+        [50, 5], 
+        [100, 7], 
+        [50, 9], 
+        [50, 11], 
+        [100, 12]
+    ]
 }
 */
 
@@ -186,13 +188,13 @@
     v.keyboard = null; // Handles keys to play notes.
     v.cmdboard = null; // Handles keys used for commands.
     v.chardraw = null;
-	v.ele = null;
+    v.ele = null;
     
     v.status = null;
     v.lastStatusUpdate = null;
     v.lastStatusCall = null;
-	
-	v.tuneEle = null;
+    
+    v.tuneEle = null;
 
     v.mode = 'practice'; // 'practice', 'rec' or 'play'.
     
@@ -201,15 +203,15 @@
     // TODO: Add note/pause maximum length (see PET/CBM)!
 
     v.tune = [
-	    [50, 0], // Length in multiples of step and note's index (255 = pause).
-		[50, 2], 
-		[50, 4], 
-		[50, 5], 
-		[100, 7],
-		[50, 9], 
-		[50, 11], 
-		[100, 12]
-	];
+        [50, 0], // Length in multiples of step and note's index (255 = pause).
+        [50, 2], 
+        [50, 4], 
+        [50, 5], 
+        [100, 7],
+        [50, 9], 
+        [50, 11], 
+        [100, 12]
+    ];
     v.tuneIndex = -1;
     v.tuneSteps = 0;
     v.tuneNeedsRedraw = true;
@@ -301,7 +303,7 @@
     f.playByNote = function(noteIndex)
     {
         f.play(f.getFirstKeyByNote(noteIndex));   
-    }
+    };
 
     f.stop = function()
     {
@@ -329,7 +331,7 @@
             //
             v.cmdKeyStates[key].pressed = curPressed;
         }
-    }
+    };
 
     /**
      * - Calls f.play() and f.stop().
@@ -462,7 +464,7 @@
             {
                 if(buf.length > 0)
                 {
-                    buf += ' '
+                    buf += ' ';
                 }
                 buf += c.keyToCmd[key];
             }
@@ -707,9 +709,9 @@
         f.updateStatus();
     };
     
-    f.getNoteDescription = function(entry, i)
-	{
-		var note = entry[1] === c.pause ? ['-', '', '-'] : c.notes[entry[1]],
+    f.getNoteDescription = function(entry)
+    {
+        var note = entry[1] === c.pause ? ['-', '', '-'] : c.notes[entry[1]],
             retVal = '';
 
         retVal += note[0];
@@ -721,37 +723,37 @@
         retVal += String(entry[0]);
 
         return retVal;
-	};
+    };
 
-	f.addNoteEle = function(entry, i)
-	{
-		var lineEle = v.ele.createAndAppend(
+    f.addNoteEle = function(entry, i)
+    {
+        var lineEle = v.ele.createAndAppend(
                 'div',
                 v.tuneEle,
                 i,
                 'row',
                 {
                     'background-color': i % 2 === 0
-                                            ? 'lightblue' : 'lightcyan'
+                        ? 'lightblue' : 'lightcyan'
                 });
-			
-		lineEle.textContent = f.getNoteDescription(entry, i);
-	};
-	
-	f.updateTuneEle = function()
-	{
+            
+        lineEle.textContent = f.getNoteDescription(entry);
+    };
+    
+    f.updateTuneEle = function()
+    {
         if(!v.tuneNeedsRedraw)
         {
             return;
         }
 
-		v.ele.clearContent(v.tuneEle);
-		
-		v.tune.forEach(f.addNoteEle);
+        v.ele.clearContent(v.tuneEle);
+        
+        v.tune.forEach(f.addNoteEle);
 
         v.tuneNeedsRedraw = false;
-	};
-	
+    };
+    
     f.init = function(p)
     {
         var buf = null;
@@ -766,12 +768,12 @@
         v.keyboard = p.keyboard.create({whitelist: Object.keys(c.keyToNotes)});
         v.cmdboard = p.keyboard.create({whitelist: Object.keys(c.keyToCmd)});
         v.chardraw = p.chardraw;
-		v.ele = p.ele;
+        v.ele = p.ele;
 
         v.status = p.status;
-		
-		v.tuneEle = p.tuneEle;	
-		
+        
+        v.tuneEle = p.tuneEle;	
+        
         v.noteplay.init(
             {
                 octaveCount: 8,

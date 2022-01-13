@@ -1,6 +1,8 @@
 
 // (c) Marcel Timm, RhinoDevel, 2021
 
+/* global gamupet */
+
 /** To be run during page load to augment global gamupet object with new
  *  property called noteplay.
  */
@@ -114,7 +116,7 @@
         v.frequencies = [];
         for(i = 0;i < p.octaveCount;++i)
         {
-            v.frequencies.push([])
+            v.frequencies.push([]);
 
             octaveOffset = 12 * (i - (4 - 1)); // 4 = Octave of frequency zero.
 

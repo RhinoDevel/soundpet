@@ -1,6 +1,8 @@
 
 // (c) Marcel Timm, RhinoDevel, 2021
 
+/* global gamupet */
+
 /** To be run during page load to augment global gamupet object with new
  *  property called gameloop.
  */

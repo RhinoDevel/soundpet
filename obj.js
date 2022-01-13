@@ -1,6 +1,8 @@
 
 // (c) Marcel Timm, RhinoDevel, 2022
 
+/* global gamupet */
+
 /** To be run during page load to augment global gamupet object with new
  *  property called obj, which is an object holding (helper) functions to handle
  *  JavaScript objects.
@@ -26,7 +28,7 @@
 
         for(key in obj)
         {
-            if(obj.hasOwnProperty(key))
+            if(Object.prototype.hasOwnProperty.call(obj, key))
             {
                 callback(obj[key], key, obj);
             }

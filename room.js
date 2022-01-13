@@ -1,6 +1,8 @@
 
 // (c) Marcel Timm, RhinoDevel, 2021
 
+/* global gamupet */
+
 /** To be run during page load to augment global gamupet object with new
  *  property called room.
  *  room.init() is a function to be run AFTER page load (to get correct body

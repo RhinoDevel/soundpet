@@ -1,6 +1,8 @@
 
 // (c) Marcel Timm, RhinoDevel, 2021
 
+/* global gamupet */
+
 /** To be run during page load to augment global gamupet object with new
  *  property called ele, which is an object holding functions to create
  *  and handle HTML elements.
@@ -65,7 +67,7 @@
         return ele;
     };
 
-	f.createAndAppend = function(
+    f.createAndAppend = function(
         tagName, parentNode, flexOrder, flexDir, styles)
     {
         var retVal = document.createElement(tagName);
@@ -88,8 +90,8 @@
 
         return retVal;
     };
-	
-	f.clearContent = function(node)
+    
+    f.clearContent = function(node)
     {
         while(node.firstChild !== null)
         {
@@ -98,8 +100,8 @@
     };
 
     o.createCanvas = f.createCanvas;
-	
-	o.createAndAppend = f.createAndAppend;
+    
+    o.createAndAppend = f.createAndAppend;
 
     o.clearContent = f.clearContent;
 
