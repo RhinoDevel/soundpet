@@ -66,6 +66,7 @@
 
     c.startOctave = 4;
     c.pause = 255; // Pseudo-index for pause.
+    c.maxNoteLength = 65535; // Maximum value for notes and pauses (2 bytes).
     c.notes = [
         ['C', '', c.startOctave],
         ['C', '#', c.startOctave],
@@ -487,6 +488,15 @@
         f.stop();
     };
 
+    f.tryAddStep = function()
+    {
+        if(v.tune[v.tuneIndex][0] === c.maxNoteLength)
+        {
+            return; // Maximum length already reached..
+        }
+        ++v.tune[v.tuneIndex][0];
+    }
+
     f.stopRecMode = function()
     {
         if(v.tuneIndex !== -1/*v.tune.length > 0*/)
@@ -497,7 +507,7 @@
             }
             else // A note.
             {
-                ++v.tune[v.tuneIndex][0]; // Avoid note length zero.
+                f.tryAddStep(); // Avoid note length zero.
             }
             v.tuneIndex = -1;
 
@@ -538,7 +548,7 @@
 
         // There is at least one note recorded.
 
-        ++v.tune[v.tuneIndex][0]; // Add a recording (time) step.
+        f.tryAddStep(); // Add a recording (time) step.
 
         if(v.tune[v.tuneIndex][1] === playingNoteIndex)
         {
