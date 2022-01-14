@@ -495,7 +495,7 @@
             return; // Maximum length already reached..
         }
         ++v.tune[v.tuneIndex][0];
-    }
+    };
 
     f.stopRecMode = function()
     {
