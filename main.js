@@ -21,7 +21,9 @@
     {
         var mainEle = null,
             screenInnerEle = null,
-            screenOuterEle = null;
+            screenOuterEle = null,
+            statusAndLoopBut = null,
+            loopButEle = null;
 
         mainEle = gamupet.ele.createAndAppend(
             'div',
@@ -69,8 +71,28 @@
                 'margin-bottom': gamupet.c.margin
             });
 
-        v.ele.status = gamupet.ele.createAndAppend(
+        statusAndLoopBut = gamupet.ele.createAndAppend(
             'div', mainEle, 3, null, null);
+
+        loopButEle = gamupet.ele.createAndAppend(
+            'input', statusAndLoopBut, null, null, null);
+        loopButEle.type = 'checkbox';
+        loopButEle.checked = true;
+        loopButEle.title = 'Start/stop processing loop.';
+        loopButEle.addEventListener(
+            'input',
+            function()
+            {
+                if(loopButEle.checked)
+                {
+                    gamupet.gameloop.start();
+                    return;
+                }
+                gamupet.gameloop.stop();
+            });
+
+        v.ele.status = gamupet.ele.createAndAppend(
+            'span', statusAndLoopBut, null, null, null);
 
         v.ele.screen = gamupet.room.init(
             {
