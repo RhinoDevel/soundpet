@@ -12,6 +12,7 @@
 
     var f = {}, v = {}, o = {};
 
+    v.stopRequest = false;
     v.lastDrawAt = null;
     v.step = 0.0; // ms (e.g. ~16.7ms for 60 FPS).
     v.delta = 0.0; // Holds milliseconds that still need to be processed by
@@ -21,10 +22,22 @@
     v.update = null;
     v.draw = null;
 
+    f.stop = function()
+    {
+        v.stopRequest = true;
+    };
+
     f.loop = function(timestamp)
     {
-        var elapsed = 0.0; 
-       
+        var elapsed = 0.0;
+
+        if(v.stopRequest)
+        {
+            v.lastDrawAt = null;
+            v.stopRequest = false;
+            return;
+        }
+
         window.requestAnimationFrame(f.loop);
 
         if(v.lastDrawAt === null)
@@ -67,7 +80,7 @@
 
     o.init = f.init;
     o.start = f.start;
+    o.stop = f.stop;
 
     gamupet.gameloop = o;
 }());
- 
