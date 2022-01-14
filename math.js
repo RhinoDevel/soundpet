@@ -18,7 +18,19 @@
         return Math.floor(Math.random() * (max - min + 1)) + min;
     };
 
+    f.getHex = function(val, minDigits)
+    {
+        var retVal = val.toString(16).toUpperCase();
+
+        while(retVal.length < minDigits)
+        {
+            retVal = '0' + retVal;
+        }
+        return retVal;
+    };
+
     o.getRand = f.getRand;
+    o.getHex = f.getHex;
 
     gamupet.math = o;
 }());
