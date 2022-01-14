@@ -150,6 +150,7 @@
                 keyboard: gamupet.keyboard,
                 chardraw: gamupet.chardraw,
                 ele: gamupet.ele,
+                math: gamupet.math,
 
                 status: v.ele.status,
                 tuneEle: v.ele.tune

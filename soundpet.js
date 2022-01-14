@@ -190,6 +190,7 @@
     v.cmdboard = null; // Handles keys used for commands.
     v.chardraw = null;
     v.ele = null;
+    v.math = null;
     
     v.status = null;
     v.lastStatusUpdate = null;
@@ -730,7 +731,7 @@
 
         retVal += ' ';
 
-        retVal += String(entry[0]);
+        retVal += v.math.getHex(entry[0], 4);
 
         return retVal;
     };
@@ -778,6 +779,7 @@
         v.keyboard = p.keyboard.create({whitelist: Object.keys(c.keyToNotes)});
         v.cmdboard = p.keyboard.create({whitelist: Object.keys(c.keyToCmd)});
         v.chardraw = p.chardraw;
+        v.math = p.math;
         v.ele = p.ele;
 
         v.status = p.status;
