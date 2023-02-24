@@ -720,7 +720,7 @@
         f.updateStatus();
     };
     
-    f.getNoteDescription = function(entry)
+    f.getNoteDescriptionTone = function(entry)
     {
         var note = entry[1] === c.pause ? ['-', '', '-'] : c.notes[entry[1]],
             retVal = '';
@@ -729,13 +729,106 @@
         retVal += note[1].length === 0 ? '-' : note[1];
         retVal += String(note[2]);
 
-        retVal += ' ';
-
-        retVal += v.math.getHex(entry[0], 4);
-
         return retVal;
     };
+    f.getNoteDescriptionLen = function(entry)
+    {
+        return v.math.getHex(entry[0], 4);
+    };
 
+    f.tryGetNoteIndex = function(str)
+    {
+        var arr = [];
+
+        if(typeof str !== 'string')
+        {
+            return -1;
+        }
+
+        arr.push(str.at(0).toUpperCase());
+
+        if(arr[0] === '-')
+        {
+            return c.pause;
+        }
+
+        if(str.length < 2)
+        {
+            return -1;
+        }
+
+        if(str.length > 2)
+        {
+            arr.push(str.at(1));
+            arr.push(parseInt(str.at(2), 10));
+        }
+        else
+        {
+            arr.push(parseInt(str.at(1), 10));
+        }
+
+        return c.notes.findIndex(
+            function(note)
+            {
+                // TODO: Support flat symbol (b).
+
+                if(note[0] !== arr[0])
+                {
+                    return false;
+                }
+                if(note[1] === '')
+                {
+                    if(arr[1] !== '-')
+                    {
+                        if(arr.length === 2 && note[2] === arr[1])
+                        {
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+                else
+                {
+                    if(arr.length !== 3)
+                    {
+                        return false;
+                    }
+                    if(note[1] !== arr[1])
+                    {
+                        return false;
+                    }
+                }
+                if(note[2] !== arr[2])
+                {
+                    return false;
+                }
+                return true;
+            });
+    };
+    f.tryGetNoteLen = function(str)
+    {
+        var val = parseInt(str, 16);
+
+        if(isNaN(val))
+        {
+            return null;
+        }
+        if(val <= 0)
+        {
+            return null;
+        }
+        if(val > c.maxNoteLength)
+        {
+            return null;
+        }
+        return val;
+    };
+
+    // TODO: Block tune-modifying UI elements during record or play mode!
+    //
+    /**
+     * - Input event listeners directly alter given entry's values!
+     */
     f.addNoteEle = function(entry, i)
     {
         var lineEle = v.ele.createAndAppend(
@@ -746,9 +839,97 @@
                 {
                     'background-color': i % 2 === 0
                         ? 'lightblue' : 'lightcyan'
-                });
-            
-        lineEle.textContent = f.getNoteDescription(entry);
+                }),
+            delButEle = v.ele.createAndAppend(
+                'button',
+                lineEle,
+                1,
+                null,
+                null),
+            insertButEle = v.ele.createAndAppend(
+                'button',
+                lineEle,
+                2,
+                null,
+                null),
+            toneEle = v.ele.createAndAppend(
+                'input',
+                lineEle,
+                3,
+                null,
+                {
+                    'background-color': 'transparent'
+                }),
+            lenEle = v.ele.createAndAppend(
+                'input',
+                lineEle,
+                4,
+                null,
+                {
+                    'text-align': 'right',
+                    'background-color': 'transparent'
+                }),
+            lastToneVal = f.getNoteDescriptionTone(entry),
+            lastLenVal = f.getNoteDescriptionLen(entry);
+        
+        delButEle.textContent = 'd';
+        delButEle.title = 'Delete note.';
+        delButEle.addEventListener(
+            'click',
+            function()
+            {
+                v.tune.splice(i, 1);
+                v.tuneNeedsRedraw = true;
+            });
+
+        insertButEle.textContent = 'i';
+        insertButEle.title = 'Insert note.';
+        insertButEle.addEventListener(
+            'click',
+            function()
+            {
+                v.tune.splice(
+                    i + 1,
+                    0, 
+                    [50, 255]); // TODO: Hard-coded default "note".
+                v.tuneNeedsRedraw = true;
+            });
+
+        toneEle.value = lastToneVal;
+        toneEle.type = 'text';
+        toneEle.maxLength = 3;
+        toneEle.size = 3;
+        toneEle.addEventListener(
+            'blur',
+            function()
+            {
+                var noteIndex = f.tryGetNoteIndex(toneEle.value);
+                
+                if(noteIndex >= 0)
+                {
+                    entry[1] = noteIndex;
+                    lastToneVal = f.getNoteDescriptionTone(entry);
+                }
+                toneEle.value = lastToneVal;
+            });
+
+        lenEle.value = lastLenVal;
+        lenEle.type = 'text';
+        lenEle.maxLength = 4;
+        lenEle.size = 4;
+        lenEle.addEventListener(
+            'blur',
+            function()
+            {
+                var noteLen = f.tryGetNoteLen(lenEle.value);
+                
+                if(noteLen !== null)
+                {
+                    entry[0] = noteLen;
+                    lastLenVal = f.getNoteDescriptionLen(entry);
+                }
+                lenEle.value = lastLenVal;
+            });
     };
     
     f.updateTuneEle = function()
