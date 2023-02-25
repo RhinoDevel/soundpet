@@ -891,7 +891,8 @@
                 3,
                 null,
                 {
-                    'background-color': 'transparent'
+                    'background-color': 'transparent',
+                    'font-family': 'inherit'
                 },
                 c.class.input.noteTone),
             lenEle = v.ele.createAndAppend(
@@ -901,7 +902,8 @@
                 null,
                 {
                     'text-align': 'right',
-                    'background-color': 'transparent'
+                    'background-color': 'transparent',
+                    'font-family': 'inherit'
                 },
                 c.class.input.noteLen),
             lastToneVal = f.getNoteDescriptionTone(entry),
