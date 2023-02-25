@@ -173,6 +173,18 @@
         'p': [31, 5, 16]
     };
 
+    c.class = {};
+    
+    c.class.but = {};
+    
+    c.class.but.noteDel = 'sp_but_note_del';
+    c.class.but.noteInsert = 'sp_but_note_insert';
+    
+    c.class.input = {};
+    
+    c.class.input.noteTone = 'sp_inp_note_tone';
+    c.class.input.noteLen = 'sp_inp_note_len';
+
     // ***************************
     // *** "Static" variables: ***
     // ***************************
@@ -221,6 +233,23 @@
     // ******************
     // *** Functions: ***
     // ******************
+
+    f.setTuneElesEnabled = function(areEnabled)
+    {
+        var noteDelButEles = v.tuneEle.querySelectorAll(
+                '.' + c.class.but.noteDel),
+            noteInsertButEles = v.tuneEle.querySelectorAll(
+                '.' + c.class.but.noteInsert),
+            noteToneInputEles = v.tuneEle.querySelectorAll(
+                '.' + c.class.input.noteTone),
+            noteLenInputEles = v.tuneEle.querySelectorAll(
+                '.' + c.class.input.noteLen);
+
+        v.ele.setNodesEnabled(noteDelButEles, areEnabled);
+        v.ele.setNodesEnabled(noteInsertButEles, areEnabled);
+        v.ele.setNodesEnabled(noteToneInputEles, areEnabled);
+        v.ele.setNodesEnabled(noteLenInputEles, areEnabled);
+    };
 
     f.getNextMode = function()
     {
@@ -575,6 +604,7 @@
 
                 f.stopPlayMode(); // Stop play (mode).
                 v.mode = 'practice'; // Go back to practice mode.
+                f.setTuneElesEnabled(true);
                 return;
             }
 
@@ -620,6 +650,7 @@
         {
             case 'practice':
             {
+                f.setTuneElesEnabled(false);
                 if(nextMode === 'play')
                 {
                     break; // Nothing to do, here.
@@ -637,6 +668,7 @@
                     throw 'Error: Invalid change from play mode!';
                 }
                 f.stopPlayMode();
+                f.setTuneElesEnabled(true);
                 break;
             }
             case 'rec':
@@ -646,6 +678,7 @@
                     throw 'Error: Invalid change from record mode!';
                 }
                 f.stopRecMode();
+                f.setTuneElesEnabled(true);
                 break;
             }
 
@@ -824,10 +857,8 @@
         return val;
     };
 
-    // TODO: Block tune-modifying UI elements during record or play mode!
-    //
     /**
-     * - Input event listeners directly alter given entry's values!
+     * - Event listeners directly insert/delete/modify entries.
      */
     f.addNoteEle = function(entry, i)
     {
@@ -845,13 +876,15 @@
                 lineEle,
                 1,
                 null,
-                null),
+                null,
+                c.class.but.noteDel),
             insertButEle = v.ele.createAndAppend(
                 'button',
                 lineEle,
                 2,
                 null,
-                null),
+                null,
+                c.class.but.noteInsert),
             toneEle = v.ele.createAndAppend(
                 'input',
                 lineEle,
@@ -859,7 +892,8 @@
                 null,
                 {
                     'background-color': 'transparent'
-                }),
+                },
+                c.class.input.noteTone),
             lenEle = v.ele.createAndAppend(
                 'input',
                 lineEle,
@@ -868,7 +902,8 @@
                 {
                     'text-align': 'right',
                     'background-color': 'transparent'
-                }),
+                },
+                c.class.input.noteLen),
             lastToneVal = f.getNoteDescriptionTone(entry),
             lastLenVal = f.getNoteDescriptionLen(entry);
         
