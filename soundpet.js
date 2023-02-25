@@ -947,6 +947,7 @@
                 }
                 toneEle.value = lastToneVal;
             });
+        v.ele.stopBubbling(toneEle, ['keyup', 'keydown']);
 
         lenEle.value = lastLenVal;
         lenEle.type = 'text';
@@ -965,6 +966,7 @@
                 }
                 lenEle.value = lastLenVal;
             });
+        v.ele.stopBubbling(lenEle, ['keyup', 'keydown']);
     };
     
     f.updateTuneEle = function()
