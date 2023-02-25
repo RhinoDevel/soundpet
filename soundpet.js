@@ -876,14 +876,14 @@
                 lineEle,
                 1,
                 null,
-                null,
+                {'font-family': 'inherit'},
                 c.class.but.noteDel),
             insertButEle = v.ele.createAndAppend(
                 'button',
                 lineEle,
                 2,
                 null,
-                null,
+                {'font-family': 'inherit'},
                 c.class.but.noteInsert),
             toneEle = v.ele.createAndAppend(
                 'input',
