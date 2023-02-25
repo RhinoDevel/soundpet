@@ -67,8 +67,13 @@
         return ele;
     };
 
+    f.addClass = function(ele, className)
+    {
+        ele.classList.add(className); // (will be ign., if class already exists)
+    };
+
     f.createAndAppend = function(
-        tagName, parentNode, flexOrder, flexDir, styles)
+        tagName, parentNode, flexOrder, flexDir, styles, className)
     {
         var retVal = document.createElement(tagName);
 
@@ -85,6 +90,10 @@
         {
             f.addStyles(retVal, styles);
         }
+        if(typeof className === 'string')
+        {
+            f.addClass(retVal, className);
+        }
 
         parentNode.appendChild(retVal);
 
@@ -99,6 +108,42 @@
         }
     };
 
+    f.setNodeEnabled = function(node, isEnabled)
+    {
+        node.disabled = !isEnabled;
+    };
+
+    f.setNodesEnabled = function(nodes, areEnabled)
+    {
+        var i = -1;
+
+        while(++i < nodes.length)
+        {
+            f.setNodeEnabled(nodes[i], areEnabled);
+        }
+    };
+
+    f.stopBubblingHelper = function(ele, eventStr)
+    {
+        ele.addEventListener(
+            eventStr,
+            function(event)
+            {
+                event.stopPropagation();
+            });
+    };
+    f.stopBubbling = function(ele, eventStrOrArr)
+    {
+        var arr = Array.isArray(eventStrOrArr)
+                    ? eventStrOrArr : [eventStrOrArr];
+
+        arr.forEach(
+            function(eventStr)
+            {
+                f.stopBubblingHelper(ele, eventStr);
+            });
+    };
+
     o.createCanvas = f.createCanvas;
     
     o.createAndAppend = f.createAndAppend;
@@ -106,6 +151,14 @@
     o.clearContent = f.clearContent;
 
     o.addStyles = f.addStyles;
+
+    o.addClass = f.addClass;
+
+    o.setNodeEnabled = f.setNodeEnabled;
+
+    o.setNodesEnabled = f.setNodesEnabled;
+
+    o.stopBubbling = f.stopBubbling;
 
     gamupet.ele = o;
 }());
