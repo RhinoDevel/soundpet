@@ -909,6 +909,7 @@
         
         delButEle.textContent = 'd';
         delButEle.title = 'Delete note.';
+        delButEle.tabIndex = -1;
         delButEle.addEventListener(
             'click',
             function()
@@ -919,6 +920,7 @@
 
         insertButEle.textContent = 'i';
         insertButEle.title = 'Insert note.';
+        insertButEle.tabIndex = -1;
         insertButEle.addEventListener(
             'click',
             function()
