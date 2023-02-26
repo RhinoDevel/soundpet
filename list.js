@@ -16,6 +16,10 @@
         f = {},
         o = {};
 
+    f.removeAt = function(l, i)
+    {
+        return g.ele.removeAt(l.ele, i);
+    };
     f.insertAt = function(l, ele, i)
     {
         return g.ele.insertAt(ele, l.ele, i);
@@ -44,6 +48,10 @@
 
         g.ele.stopBubbling(retVal.ele, ['keyup', 'keydown']);
 
+        retVal.removeAt = function(i)
+        {
+            return f.removeAt(retVal, i);
+        }
         retVal.insertAt = function(ele, i)
         {
             return f.insertAt(retVal, ele, i);
