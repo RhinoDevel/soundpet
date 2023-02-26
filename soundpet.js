@@ -893,8 +893,13 @@
             'click',
             function()
             {
-                v.tune.splice(i, 1);
-                v.tuneNeedsRedraw = true;
+                var j = parseInt(lineEle.style.order, 10);
+                //
+                // Not necessarily equal to i anymore.
+
+                v.tune.splice(j, 1);
+                
+                v.tuneList.removeAt(j);
             });
 
         insertButEle = v.ele.createAndInsert(
