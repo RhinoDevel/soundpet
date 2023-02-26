@@ -14,7 +14,12 @@
 
     const g = gamupet, // Shortcut
         f = {},
-        o = {};
+        o = {},
+        c = {};
+
+    c.bgColor = {};
+    c.bgColor.marked = 'yellow';
+    c.bgColor.unmarked = 'lightblue';
 
     f.removeAt = function(l, i)
     {
@@ -26,7 +31,7 @@
     };
     f.insertAt = function(l, ele, i)
     {
-        ele.style['background-color'] = 'lightblue'; // Hard-coded
+        ele.style['background-color'] = c.bgColor.unmarked;
 
         return g.ele.insertAt(ele, l, i);
     };
@@ -37,7 +42,7 @@
     f.markNone = function(l)
     {
         g.ele.addStylesToChildren(
-            l, {'background-color': 'lightblue'}); // Hard-coded
+            l, {'background-color': c.bgColor.unmarked});
     };
     f.markSingle = function(l, i, scrollTo)
     {
@@ -45,7 +50,7 @@
 
         f.markNone(l);  
 
-        g.ele.addStyles(ele, {'background-color': 'yellow'});
+        g.ele.addStyles(ele, {'background-color': c.bgColor.marked});
 
         if(scrollTo)
         {
@@ -106,7 +111,7 @@
         retVal.setEnabled = function(isEnabled)
         {
             return f.setEnabled(listEle, isEnabled);
-        }
+        };
         return retVal;
     };
 
