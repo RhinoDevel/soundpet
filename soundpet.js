@@ -612,7 +612,7 @@
 
             // Set next note/pause as current note/pause:            
 
-            v.tuneList.markSingle(v.tuneIndex);
+            v.tuneList.markSingle(v.tuneIndex, true);
 
             v.tuneSteps = v.tune[v.tuneIndex][0];
             
