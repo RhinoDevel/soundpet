@@ -35,12 +35,18 @@
         g.ele.addStylesToChildren(
             l.ele, {'background-color': 'lightblue'}); // Hard-coded
     };
-    f.markSingle = function(l, i)
+    f.markSingle = function(l, i, scrollTo)
     {
+        const ele = g.ele.getChildAt(l.ele, i);
+
         f.markNone(l);  
 
-        g.ele.addStyles(
-            g.ele.getChildAt(l.ele, i), {'background-color': 'yellow'});
+        g.ele.addStyles(ele, {'background-color': 'yellow'});
+
+        if(scrollTo)
+        {
+            ele.scrollIntoView(false);
+        }
     };
 
     /**
@@ -79,9 +85,9 @@
         {
             return f.markNone(retVal);
         };
-        retVal.markSingle = function(i)
+        retVal.markSingle = function(i, scrollTo)
         {
-            return f.markSingle(retVal, i);
+            return f.markSingle(retVal, i, scrollTo);
         };
         return retVal;
     };
