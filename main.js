@@ -14,10 +14,13 @@
     v.ele = {};
 
     v.ele.screen = null;
-    v.ele.tune = null;
     v.ele.status = null;
 
-    f.initEles = function()
+    v.list = {};
+
+    v.list.tune = null;
+
+    f.init = function()
     {
         var mainEle = null,
             screenInnerEle = null,
@@ -56,19 +59,18 @@
 
         mainEle.appendChild(screenOuterEle);
 
-        v.ele.tune = gamupet.ele.createAndAppend(
-            'div',
-            mainEle,
-            2,
-            'column',
+        v.list.tune = gamupet.list.createAndAppend(
             {
-                border: '1px solid black',
-                'overflow-y': 'scroll',
-                'font-family': 'monospace',
-                width: gamupet.c.dim.tune.width,
-                height: gamupet.c.dim.tune.height,
-                'margin-right': gamupet.c.margin,
-                'margin-bottom': gamupet.c.margin
+                parentNode: mainEle,
+                flexOrder: 2,
+                styles: {
+                    border: '1px solid black',
+                    'font-family': 'monospace',
+                    width: gamupet.c.dim.tune.width,
+                    height: gamupet.c.dim.tune.height,
+                    'margin-right': gamupet.c.margin,
+                    'margin-bottom': gamupet.c.margin
+                }
             });
 
         statusAndLoopBut = gamupet.ele.createAndAppend(
@@ -113,7 +115,7 @@
 
     f.onLoad = function()
     {
-        f.initEles();
+        f.init();
 
         gamupet.chardraw.init(
             {
@@ -153,7 +155,7 @@
                 math: gamupet.math,
 
                 status: v.ele.status,
-                tuneEle: v.ele.tune
+                tuneList: v.list.tune
             });
 
         gamupet.gameloop.init(

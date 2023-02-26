@@ -208,7 +208,7 @@
     v.lastStatusUpdate = null;
     v.lastStatusCall = null;
     
-    v.tuneEle = null;
+    v.tuneList = null;
 
     v.mode = 'practice'; // 'practice', 'rec' or 'play'.
     
@@ -236,13 +236,13 @@
 
     f.setTuneElesEnabled = function(areEnabled)
     {
-        var noteDelButEles = v.tuneEle.querySelectorAll(
+        var noteDelButEles = v.tuneList.ele.querySelectorAll(
                 '.' + c.class.but.noteDel),
-            noteInsertButEles = v.tuneEle.querySelectorAll(
+            noteInsertButEles = v.tuneList.ele.querySelectorAll(
                 '.' + c.class.but.noteInsert),
-            noteToneInputEles = v.tuneEle.querySelectorAll(
+            noteToneInputEles = v.tuneList.ele.querySelectorAll(
                 '.' + c.class.input.noteTone),
-            noteLenInputEles = v.tuneEle.querySelectorAll(
+            noteLenInputEles = v.tuneList.ele.querySelectorAll(
                 '.' + c.class.input.noteLen);
 
         v.ele.setNodesEnabled(noteDelButEles, areEnabled);
@@ -864,7 +864,7 @@
     {
         var lineEle = v.ele.createAndAppend(
                 'div',
-                v.tuneEle,
+                v.tuneList.ele,
                 i,
                 'row',
                 {
@@ -980,7 +980,7 @@
             return;
         }
 
-        v.ele.clearContent(v.tuneEle);
+        v.ele.clearContent(v.tuneList.ele);
         
         v.tune.forEach(f.addNoteEle);
 
@@ -1006,7 +1006,7 @@
 
         v.status = p.status;
         
-        v.tuneEle = p.tuneEle;	
+        v.tuneList = p.tuneList;	
         
         v.noteplay.init(
             {
