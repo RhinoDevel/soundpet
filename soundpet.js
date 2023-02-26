@@ -96,6 +96,7 @@
 
         ['C', '', c.startOctave + 2]
     ];
+    c.defaultNote = [50, c.pause];
     c.keyToNotes = { // Hard-coded to german keyboard layout.
         '2': c.notes[1 * 12 +  1],
         '3': c.notes[1 * 12 +  3],
@@ -872,41 +873,19 @@
             toneEle = null,
             lenEle = null,
             lastToneVal = f.getNoteDescriptionTone(entry),
-            lastLenVal = f.getNoteDescriptionLen(entry);
+            lastLenVal = f.getNoteDescriptionLen(entry),
+            curOrder = 0;
 
         lineEle = v.ele.create('div', 'row');
-
-        delButEle = v.ele.createAndInsert(
-            'button',
-            lineEle,
-            0,
-            null,
-            {'font-family': 'inherit'},
-            c.class.but.noteDel);
-        delButEle.textContent = 'd';
-        delButEle.title = 'Delete note.';
-        delButEle.tabIndex = -1;
-        delButEle.addEventListener(
-            'click',
-            function()
-            {
-                var j = parseInt(lineEle.style.order, 10);
-                //
-                // Not necessarily equal to i anymore.
-
-                v.tune.splice(j, 1);
-                
-                v.tuneList.removeAt(j);
-            });
 
         insertButEle = v.ele.createAndInsert(
             'button',
             lineEle,
-            1,
+            curOrder++,
             null,
             {'font-family': 'inherit'},
             c.class.but.noteInsert);
-        insertButEle.textContent = 'i';
+        insertButEle.textContent = '+';
         insertButEle.title = 'Insert note.';
         insertButEle.tabIndex = -1;
         insertButEle.addEventListener(
@@ -917,10 +896,7 @@
                 //
                 // Not necessarily equal to i + 1 anymore.
 
-                v.tune.splice(
-                    j,
-                    0, 
-                    [50, 255]); // TODO: Hard-coded default "note".
+                v.tune.splice(j, 0, c.defaultNote);
 
                 f.insertNoteEle(v.tune[j], j); // *** "RECURSION" ***
             });
@@ -928,7 +904,7 @@
         toneEle = v.ele.createAndInsert(
             'input',
             lineEle,
-            2,
+            curOrder++,
             null,
             {
                 'background-color': 'transparent',
@@ -962,7 +938,7 @@
         lenEle = v.ele.createAndInsert(
             'input',
             lineEle,
-            3,
+            curOrder++,
             null,
             {
                 'text-align': 'right',
@@ -993,6 +969,29 @@
                 }
                 lenEle.value = lastLenVal;
             });
+
+        delButEle = v.ele.createAndInsert(
+                'button',
+                lineEle,
+                curOrder++,
+                null,
+                {'font-family': 'inherit'},
+                c.class.but.noteDel);
+            delButEle.textContent = '-';
+            delButEle.title = 'Delete note.';
+            delButEle.tabIndex = -1;
+            delButEle.addEventListener(
+                'click',
+                function()
+                {
+                    var j = parseInt(lineEle.style.order, 10);
+                    //
+                    // Not necessarily equal to i anymore.
+    
+                    v.tune.splice(j, 1);
+                    
+                    v.tuneList.removeAt(j);
+                });
 
         v.tuneList.insertAt(lineEle, i);
     };
