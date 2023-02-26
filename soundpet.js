@@ -940,6 +940,12 @@
         toneEle.maxLength = 3;
         toneEle.size = 3;
         toneEle.addEventListener(
+            'click',
+            function()
+            {
+                toneEle.select();
+            });
+        toneEle.addEventListener(
             'blur',
             function()
             {
@@ -968,6 +974,12 @@
         lenEle.type = 'text';
         lenEle.maxLength = 4;
         lenEle.size = 4;
+        lenEle.addEventListener(
+            'click',
+            function()
+            {
+                lenEle.select();
+            });
         lenEle.addEventListener(
             'blur',
             function()
