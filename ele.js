@@ -67,6 +67,16 @@
         return ele;
     };
 
+    f.addStylesToChildren = function(ele, styles)
+    {
+        var i = -1;
+
+        while(++i < ele.childNodes.length)
+        {
+            f.addStyles(ele.childNodes[i], styles);
+        }
+    };
+
     f.addClass = function(ele, className)
     {
         ele.classList.add(className); // (will be ign., if class already exists)
@@ -99,6 +109,29 @@
     f.decrChildrenFlexOrders = function(ele, firstFlexOrder)
     {
         return f.addToChildrenFlexOrders(ele, firstFlexOrder, -1);
+    };
+
+    f.getChildAt = function(ele, flexOrder)
+    {
+        var i = -1, n = -1;
+
+        while(++i < ele.childNodes.length)
+        {
+            // The flex order does not equal the actual child node order.
+
+            n = parseInt(ele.childNodes[i].style.order, 10);
+            if(isNaN(n))
+            {
+                continue;
+            }
+            if(n === flexOrder)
+            {
+                return ele.childNodes[i];
+                //
+                // (assuming all flex order nrs. to be unique..)
+            }
+        }
+        return null;
     };
 
     f.removeAt = function(ele, flexOrder)
@@ -231,6 +264,8 @@
     
     o.create = f.create;
 
+    o.getChildAt = f.getChildAt;
+
     o.removeAt = f.removeAt;
 
     o.append = f.append;
@@ -242,6 +277,8 @@
     o.clearContent = f.clearContent;
 
     o.addStyles = f.addStyles;
+
+    o.addStylesToChildren = f.addStylesToChildren;
 
     o.addClass = f.addClass;
 
