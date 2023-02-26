@@ -512,6 +512,8 @@
 
     f.stopPlayMode = function()
     {
+        v.tuneList.markNone();
+
         v.tuneIndex = -1;
         v.tuneSteps = 0;
 
@@ -608,7 +610,9 @@
                 return;
             }
 
-            // Set next note/pause as current note/pause:
+            // Set next note/pause as current note/pause:            
+
+            v.tuneList.markSingle(v.tuneIndex);
 
             v.tuneSteps = v.tune[v.tuneIndex][0];
             
@@ -870,14 +874,7 @@
             lastToneVal = f.getNoteDescriptionTone(entry),
             lastLenVal = f.getNoteDescriptionLen(entry);
 
-        lineEle = v.ele.create(
-                'div',
-                'row',
-                {
-                    'background-color': i % 2 === 0
-                        ? 'lightblue' : 'lightcyan'
-                },
-                null);
+        lineEle = v.ele.create('div', 'row');
 
         delButEle = v.ele.createAndInsert(
             'button',
@@ -989,7 +986,7 @@
     };
     
     f.updateTuneEle = function()
-    {
+    {        
         if(!v.tuneNeedsRedraw)
         {
             return;
