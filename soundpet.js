@@ -235,23 +235,6 @@
     // *** Functions: ***
     // ******************
 
-    f.setTuneElesEnabled = function(areEnabled)
-    {
-        var noteDelButEles = v.tuneList.ele.querySelectorAll(
-                '.' + c.class.but.noteDel),
-            noteInsertButEles = v.tuneList.ele.querySelectorAll(
-                '.' + c.class.but.noteInsert),
-            noteToneInputEles = v.tuneList.ele.querySelectorAll(
-                '.' + c.class.input.noteTone),
-            noteLenInputEles = v.tuneList.ele.querySelectorAll(
-                '.' + c.class.input.noteLen);
-
-        v.ele.setNodesEnabled(noteDelButEles, areEnabled);
-        v.ele.setNodesEnabled(noteInsertButEles, areEnabled);
-        v.ele.setNodesEnabled(noteToneInputEles, areEnabled);
-        v.ele.setNodesEnabled(noteLenInputEles, areEnabled);
-    };
-
     f.getNextMode = function()
     {
         // Hard-coded usage of keys 'o' ('rec') and 'p' ('play'):
@@ -607,7 +590,7 @@
 
                 f.stopPlayMode(); // Stop play (mode).
                 v.mode = 'practice'; // Go back to practice mode.
-                f.setTuneElesEnabled(true);
+                v.tuneList.setEnabled(true);
                 return;
             }
 
@@ -655,7 +638,7 @@
         {
             case 'practice':
             {
-                f.setTuneElesEnabled(false);
+                v.tuneList.setEnabled(false);
                 if(nextMode === 'play')
                 {
                     break; // Nothing to do, here.
@@ -673,7 +656,7 @@
                     throw 'Error: Invalid change from play mode!';
                 }
                 f.stopPlayMode();
-                f.setTuneElesEnabled(true);
+                v.tuneList.setEnabled(true);
                 break;
             }
             case 'rec':
@@ -683,7 +666,7 @@
                     throw 'Error: Invalid change from record mode!';
                 }
                 f.stopRecMode();
-                f.setTuneElesEnabled(true);
+                v.tuneList.setEnabled(true);
                 break;
             }
 
@@ -1003,8 +986,7 @@
             return;
         }
 
-        v.ele.clearContent(v.tuneList.ele);
-        
+        v.tuneList.removeAll();
         v.tune.forEach(f.insertNoteEle);
 
         v.tuneNeedsRedraw = false;
