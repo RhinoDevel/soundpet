@@ -911,11 +911,14 @@
             'click',
             function()
             {
+                var j = i + 1;
+
                 v.tune.splice(
-                    i + 1,
+                    j,
                     0, 
                     [50, 255]); // TODO: Hard-coded default "note".
-                v.tuneNeedsRedraw = true;
+
+                f.insertNoteEle(v.tune[j], j); // *** "RECURSION" ***
             });
 
         toneEle = v.ele.createAndInsert(
