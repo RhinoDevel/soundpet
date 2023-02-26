@@ -860,55 +860,32 @@
     /**
      * - Event listeners directly insert/delete/modify entries.
      */
-    f.addNoteEle = function(entry, i)
+    f.insertNoteEle = function(entry, i)
     {
-        var lineEle = v.ele.createAndAppend(
+        var lineEle = null,
+            delButEle = null,
+            insertButEle = null,
+            toneEle = null,
+            lenEle = null,
+            lastToneVal = f.getNoteDescriptionTone(entry),
+            lastLenVal = f.getNoteDescriptionLen(entry);
+
+        lineEle = v.ele.create(
                 'div',
-                v.tuneList.ele,
-                i,
                 'row',
                 {
                     'background-color': i % 2 === 0
                         ? 'lightblue' : 'lightcyan'
-                }),
-            delButEle = v.ele.createAndAppend(
-                'button',
-                lineEle,
-                1,
-                null,
-                {'font-family': 'inherit'},
-                c.class.but.noteDel),
-            insertButEle = v.ele.createAndAppend(
-                'button',
-                lineEle,
-                2,
-                null,
-                {'font-family': 'inherit'},
-                c.class.but.noteInsert),
-            toneEle = v.ele.createAndAppend(
-                'input',
-                lineEle,
-                3,
-                null,
-                {
-                    'background-color': 'transparent',
-                    'font-family': 'inherit'
                 },
-                c.class.input.noteTone),
-            lenEle = v.ele.createAndAppend(
-                'input',
-                lineEle,
-                4,
-                null,
-                {
-                    'text-align': 'right',
-                    'background-color': 'transparent',
-                    'font-family': 'inherit'
-                },
-                c.class.input.noteLen),
-            lastToneVal = f.getNoteDescriptionTone(entry),
-            lastLenVal = f.getNoteDescriptionLen(entry);
-        
+                null);
+
+        delButEle = v.ele.createAndInsert(
+            'button',
+            lineEle,
+            0,
+            null,
+            {'font-family': 'inherit'},
+            c.class.but.noteDel);
         delButEle.textContent = 'd';
         delButEle.title = 'Delete note.';
         delButEle.tabIndex = -1;
@@ -920,6 +897,13 @@
                 v.tuneNeedsRedraw = true;
             });
 
+        insertButEle = v.ele.createAndInsert(
+            'button',
+            lineEle,
+            1,
+            null,
+            {'font-family': 'inherit'},
+            c.class.but.noteInsert);
         insertButEle.textContent = 'i';
         insertButEle.title = 'Insert note.';
         insertButEle.tabIndex = -1;
@@ -934,6 +918,16 @@
                 v.tuneNeedsRedraw = true;
             });
 
+        toneEle = v.ele.createAndInsert(
+            'input',
+            lineEle,
+            2,
+            null,
+            {
+                'background-color': 'transparent',
+                'font-family': 'inherit'
+            },
+            c.class.input.noteTone);
         toneEle.value = lastToneVal;
         toneEle.type = 'text';
         toneEle.maxLength = 3;
@@ -951,8 +945,18 @@
                 }
                 toneEle.value = lastToneVal;
             });
-        v.ele.stopBubbling(toneEle, ['keyup', 'keydown']);
 
+        lenEle = v.ele.createAndInsert(
+            'input',
+            lineEle,
+            3,
+            null,
+            {
+                'text-align': 'right',
+                'background-color': 'transparent',
+                'font-family': 'inherit'
+            },
+            c.class.input.noteLen);
         lenEle.value = lastLenVal;
         lenEle.type = 'text';
         lenEle.maxLength = 4;
@@ -970,7 +974,8 @@
                 }
                 lenEle.value = lastLenVal;
             });
-        v.ele.stopBubbling(lenEle, ['keyup', 'keydown']);
+
+        v.tuneList.insertAt(lineEle, i);
     };
     
     f.updateTuneEle = function()
@@ -982,7 +987,7 @@
 
         v.ele.clearContent(v.tuneList.ele);
         
-        v.tune.forEach(f.addNoteEle);
+        v.tune.forEach(f.insertNoteEle);
 
         v.tuneNeedsRedraw = false;
     };

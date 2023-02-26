@@ -72,20 +72,39 @@
         ele.classList.add(className); // (will be ign., if class already exists)
     };
 
-    f.createAndAppend = function(
-        tagName, parentNode, flexOrder, flexDir, styles, className)
+    f.append = function(ele, parentNode, flexOrder)
+    {
+        if(typeof flexOrder === 'number')
+        {
+            ele.style.order = String(flexOrder);
+        }
+        parentNode.appendChild(ele);
+    };
+
+    f.insertAt = function(ele, parentNode, flexOrder)
+    {
+        if(flexOrder < 0)
+        {
+            throw 'ele.insertAt : Error: Exp. i to be greater or eq. to 0!';
+        }
+        if(flexOrder > parentNode.childNodes.length)
+        {
+            throw 'ele.insertAt : Error: Exp. i to be smaller or equal to cur. children count!';
+        }
+        if(!parentNode.hasChildNodes && flexOrder !== 0)
+        {
+            throw 'ele.insertAt : Error: Exp. given i to be 0 for insertion in node w/o children!';
+        }
+
+        f.append(ele, parentNode, flexOrder);
+        //
+        // Actual ordering of entries is done via flexbox.
+    };
+
+    f.create = function(tagName, flexDir, styles, className)
     {
         var retVal = document.createElement(tagName);
 
-        if(typeof flexOrder === 'number')
-        {
-            retVal.style.order = String(flexOrder);
-        }
-        if(typeof flexDir === 'string')
-        {
-            retVal.style.display = 'flex';
-            retVal.style['flex-direction'] = flexDir;
-        }
         if(g.obj.isObj(styles))
         {
             f.addStyles(retVal, styles);
@@ -94,9 +113,20 @@
         {
             f.addClass(retVal, className);
         }
+        if(typeof flexDir === 'string')
+        {
+            retVal.style.display = 'flex';
+            retVal.style['flex-direction'] = flexDir;
+        }
+        return retVal;
+    };
 
-        parentNode.appendChild(retVal);
+    f.createAndInsert = function(
+        tagName, parentNode, flexOrder, flexDir, styles, className)
+    {
+        var retVal = f.create(tagName, flexDir, styles, className);
 
+        f.insertAt(retVal, parentNode, flexOrder);
         return retVal;
     };
     
@@ -146,7 +176,13 @@
 
     o.createCanvas = f.createCanvas;
     
-    o.createAndAppend = f.createAndAppend;
+    o.create = f.create;
+
+    o.append = f.append;
+
+    o.insertAt = f.insertAt;
+
+    o.createAndInsert = f.createAndInsert;
 
     o.clearContent = f.clearContent;
 

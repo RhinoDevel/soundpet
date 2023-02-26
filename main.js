@@ -28,17 +28,17 @@
             statusAndLoopBut = null,
             loopButEle = null;
 
-        mainEle = gamupet.ele.createAndAppend(
+        mainEle = gamupet.ele.createAndInsert(
             'div',
             document.body,
             null,
             'row',
             {'flex-wrap': 'wrap'});
 
-        screenOuterEle = gamupet.ele.createAndAppend(
+        screenOuterEle = gamupet.ele.createAndInsert(
             'div',
             mainEle,
-            1,
+            0,
             'column'/*'row'*/,
             {
                 width: String(gamupet.c.dim.screenOuter.width) + 'px',
@@ -50,19 +50,19 @@
                 'margin-bottom': gamupet.c.margin
             });
 
-        screenInnerEle = gamupet.ele.createAndAppend(
+        screenInnerEle = gamupet.ele.createAndInsert(
             'div',
             screenOuterEle,
-            1,
+            0,
             null,
             {position: 'relative'});
 
         mainEle.appendChild(screenOuterEle);
 
-        v.list.tune = gamupet.list.createAndAppend(
+        v.list.tune = gamupet.list.createAndInsert(
             {
                 parentNode: mainEle,
-                flexOrder: 2,
+                flexOrder: 1,
                 styles: {
                     border: '1px solid black',
                     'font-family': 'monospace',
@@ -73,10 +73,10 @@
                 }
             });
 
-        statusAndLoopBut = gamupet.ele.createAndAppend(
-            'div', mainEle, 3, null, null);
+        statusAndLoopBut = gamupet.ele.createAndInsert(
+            'div', mainEle, 2, null, null);
 
-        loopButEle = gamupet.ele.createAndAppend(
+        loopButEle = gamupet.ele.createAndInsert(
             'input', statusAndLoopBut, null, null, null);
         loopButEle.type = 'checkbox';
         loopButEle.checked = true;
@@ -93,7 +93,7 @@
                 gamupet.gameloop.stop();
             });
 
-        v.ele.status = gamupet.ele.createAndAppend(
+        v.ele.status = gamupet.ele.createAndInsert(
             'span', statusAndLoopBut, null, null, null);
 
         v.ele.screen = gamupet.room.init(

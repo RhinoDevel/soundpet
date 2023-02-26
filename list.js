@@ -12,16 +12,27 @@
 {
     'use strict';
 
-    const f = {}, o = {};
+    const g = gamupet, // Shortcut
+        f = {},
+        o = {};
+
+    f.insertAt = function(l, ele, i)
+    {
+        return g.ele.insertAt(ele, l.ele, i);
+    };
+    f.append = function(l, ele)
+    {
+        return f.insertAt(l, ele, l.ele.childNodes.length);
+    };
 
     /**
      * - Returns the list object, NOT just the element.
      */
-    f.createAndAppend = function(p)
+    f.createAndInsert = function(p)
     {
         const retVal = {};
 
-        retVal.ele = gamupet.ele.createAndAppend(
+        retVal.ele = g.ele.createAndInsert(
             'div',
             p.parentNode,
             p.flexOrder,
@@ -31,10 +42,20 @@
 
         retVal.ele.style['overflow-y'] = 'scroll';
 
+        g.ele.stopBubbling(retVal.ele, ['keyup', 'keydown']);
+
+        retVal.insertAt = function(ele, i)
+        {
+            return f.insertAt(retVal, ele, i);
+        };
+        retVal.append = function(ele)
+        {
+            return f.append(retVal, ele);
+        };
         return retVal;
     };
 
-    o.createAndAppend = f.createAndAppend;
+    o.createAndInsert = f.createAndInsert;
 
     gamupet.list = o;
 }());
