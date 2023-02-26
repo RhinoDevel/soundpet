@@ -72,12 +72,14 @@
         ele.classList.add(className); // (will be ign., if class already exists)
     };
 
-    f.incrChildrenFlexOrders = function(ele, firstFlexOrder)
+    f.addToChildrenFlexOrders = function(ele, firstFlexOrder, val)
     {
         var i = -1, n = -1;
 
         while(++i < ele.childNodes.length)
         {
+            // The flex order does not equal the actual child node order.
+
             n = parseInt(ele.childNodes[i].style.order, 10);
             if(isNaN(n))
             {
@@ -87,7 +89,37 @@
             {
                 continue;
             }
-            ele.childNodes[i].style.order = String(n + 1);
+            ele.childNodes[i].style.order = String(n + val);
+        }
+    };
+    f.incrChildrenFlexOrders = function(ele, firstFlexOrder)
+    {
+        return f.addToChildrenFlexOrders(ele, firstFlexOrder, 1);
+    };
+    f.decrChildrenFlexOrders = function(ele, firstFlexOrder)
+    {
+        return f.addToChildrenFlexOrders(ele, firstFlexOrder, -1);
+    };
+
+    f.removeAt = function(ele, flexOrder)
+    {
+        var i = -1, n = -1;
+
+        while(++i < ele.childNodes.length)
+        {
+            // The flex order does not equal the actual child node order.
+
+            n = parseInt(ele.childNodes[i].style.order, 10);
+            if(isNaN(n))
+            {
+                continue;
+            }
+            if(n === flexOrder)
+            {
+                ele.childNodes[i].remove();
+                f.decrChildrenFlexOrders(ele, n + 1);
+                return; // (assuming all flex order nrs. to be unique..)
+            }
         }
     };
 
@@ -198,6 +230,8 @@
     o.createCanvas = f.createCanvas;
     
     o.create = f.create;
+
+    o.removeAt = f.removeAt;
 
     o.append = f.append;
 
