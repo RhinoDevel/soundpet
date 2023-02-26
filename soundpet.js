@@ -911,7 +911,9 @@
             'click',
             function()
             {
-                var j = i + 1;
+                var j = parseInt(lineEle.style.order, 10) + 1;
+                //
+                // Not necessarily equal to i + 1 anymore.
 
                 v.tune.splice(
                     j,

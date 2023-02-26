@@ -72,11 +72,32 @@
         ele.classList.add(className); // (will be ign., if class already exists)
     };
 
+    f.incrChildrenFlexOrders = function(ele, firstFlexOrder)
+    {
+        var i = -1, n = -1;
+
+        while(++i < ele.childNodes.length)
+        {
+            n = parseInt(ele.childNodes[i].style.order, 10);
+            if(isNaN(n))
+            {
+                continue;
+            }
+            if(n < firstFlexOrder)
+            {
+                continue;
+            }
+            ele.childNodes[i].style.order = String(n + 1);
+        }
+    };
+
     f.append = function(ele, parentNode, flexOrder)
     {
         if(typeof flexOrder === 'number')
         {
             ele.style.order = String(flexOrder);
+
+            f.incrChildrenFlexOrders(parentNode, flexOrder);
         }
         parentNode.appendChild(ele);
     };
