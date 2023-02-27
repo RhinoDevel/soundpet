@@ -186,6 +186,10 @@
     c.class.input.noteTone = 'sp_inp_note_tone';
     c.class.input.noteLen = 'sp_inp_note_len';
 
+    c.class.div = {};
+
+    c.class.div.noteNr = 'sp_div_note_nr';
+
     // ***************************
     // *** "Static" variables: ***
     // ***************************
@@ -853,6 +857,7 @@
         var lineEle = null,
             delButEle = null,
             insertButEle = null,
+            nrDivEle = null,
             toneEle = null,
             lenEle = null,
             lastToneVal = f.getNoteDescriptionTone(entry),
@@ -884,6 +889,15 @@
                 f.insertNoteEle(v.tune[j], j); // *** "RECURSION" ***
                 v.tuneList.scrollIntoView(j);
             });
+
+        nrDivEle = v.ele.createAndInsert(
+            'div',
+            lineEle,
+            curOrder++,
+            null,
+            null,
+            c.class.div.noteNr);
+        nrDivEle.textContent = v.math.getHex(i, 4); // Hard-coded!
 
         toneEle = v.ele.createAndInsert(
             'input',
@@ -993,6 +1007,15 @@
         v.tuneNeedsRedraw = false;
     };
     
+    /**
+     * - Second parameter is the NEW flex order value as INTEGER.
+     */
+    f.onTuneListFlexOrderChanged = function(lineEle, i)
+    {
+        lineEle.querySelector('.' + c.class.div.noteNr).textContent
+            = v.math.getHex(i, 4); // Hard-coded!
+    };
+
     f.init = function(p)
     {
         var buf = null,
@@ -1028,6 +1051,8 @@
                 v.tuneList.scrollIntoView(v.tune.length - 1);
             });
         v.tuneList.appendToTopRow(tuneListAddButEle);
+
+        v.tuneList.setOnFlexOrderChanged(f.onTuneListFlexOrderChanged);
         
         v.noteplay.init(
             {
