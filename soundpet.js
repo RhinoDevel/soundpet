@@ -868,8 +868,8 @@
             null,
             {'font-family': 'inherit'},
             c.class.but.noteInsert);
-        insertButEle.textContent = '+';
-        insertButEle.title = 'Insert note.';
+        insertButEle.textContent = '+'; // Hard-coded
+        insertButEle.title = 'Insert note.'; // Hard-coded
         insertButEle.tabIndex = -1;
         insertButEle.addEventListener(
             'click',
@@ -879,7 +879,7 @@
                 //
                 // Not necessarily equal to i + 1 anymore.
 
-                v.tune.splice(j, 0, c.defaultNote);
+                v.tune.splice(j, 0, c.defaultNote.slice());
 
                 f.insertNoteEle(v.tune[j], j); // *** "RECURSION" ***
             });
@@ -994,7 +994,8 @@
     
     f.init = function(p)
     {
-        var buf = null;
+        var buf = null,
+            tuneListAddButEle = null;
 
         v.cmdKeyStates = {};
         for(buf in c.keyToCmd)
@@ -1011,7 +1012,20 @@
 
         v.status = p.status;
         
-        v.tuneList = p.tuneList;	
+        v.tuneList = p.tuneList;
+        tuneListAddButEle = gamupet.ele.create('button');
+        tuneListAddButEle.textContent = '+'; // Hard-coded
+        tuneListAddButEle.title = 'Insert note.'; // Hard-coded
+        tuneListAddButEle.tabIndex = -1;
+        tuneListAddButEle.addEventListener(
+            'click',
+            function()
+            {
+                v.tune.push(c.defaultNote.slice());
+
+                f.insertNoteEle(v.tune[v.tune.length - 1], v.tune.length - 1);
+            });
+        v.tuneList.appendToTopRow(tuneListAddButEle);
         
         v.noteplay.init(
             {
