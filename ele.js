@@ -82,9 +82,12 @@
         ele.classList.add(className); // (will be ign., if class already exists)
     };
 
-    f.addToChildrenFlexOrders = function(ele, firstFlexOrder, val)
+    f.addToChildrenFlexOrders = function(
+        ele, firstFlexOrder, val, onChanged)
     {
-        var i = -1, n = -1;
+        var i = -1,
+            n = -1,
+            hasOnChanged = typeof onChanged === 'function';
 
         while(++i < ele.childNodes.length)
         {
@@ -100,15 +103,19 @@
                 continue;
             }
             ele.childNodes[i].style.order = String(n + val);
+            if(hasOnChanged)
+            {
+                onChanged(ele.childNodes[i], n + val);
+            }
         }
     };
-    f.incrChildrenFlexOrders = function(ele, firstFlexOrder)
+    f.incrChildrenFlexOrders = function(ele, firstFlexOrder, onChanged)
     {
-        return f.addToChildrenFlexOrders(ele, firstFlexOrder, 1);
+        return f.addToChildrenFlexOrders(ele, firstFlexOrder, 1, onChanged);
     };
-    f.decrChildrenFlexOrders = function(ele, firstFlexOrder)
+    f.decrChildrenFlexOrders = function(ele, firstFlexOrder, onChanged)
     {
-        return f.addToChildrenFlexOrders(ele, firstFlexOrder, -1);
+        return f.addToChildrenFlexOrders(ele, firstFlexOrder, -1, onChanged);
     };
 
     f.getChildAt = function(ele, flexOrder)
@@ -134,7 +141,7 @@
         return null;
     };
 
-    f.removeAt = function(ele, flexOrder)
+    f.removeAt = function(ele, flexOrder, onFlexOrderChanged)
     {
         var i = -1, n = -1;
 
@@ -150,24 +157,24 @@
             if(n === flexOrder)
             {
                 ele.childNodes[i].remove();
-                f.decrChildrenFlexOrders(ele, n + 1);
+                f.decrChildrenFlexOrders(ele, n + 1, onFlexOrderChanged);
                 return; // (assuming all flex order nrs. to be unique..)
             }
         }
     };
 
-    f.append = function(ele, parentNode, flexOrder)
+    f.append = function(ele, parentNode, flexOrder, onFlexOrderChanged)
     {
         if(typeof flexOrder === 'number')
         {
             ele.style.order = String(flexOrder);
 
-            f.incrChildrenFlexOrders(parentNode, flexOrder);
+            f.incrChildrenFlexOrders(parentNode, flexOrder, onFlexOrderChanged);
         }
         parentNode.appendChild(ele);
     };
 
-    f.insertAt = function(ele, parentNode, flexOrder)
+    f.insertAt = function(ele, parentNode, flexOrder, onFlexOrderChanged)
     {
         if(flexOrder < 0)
         {
@@ -182,7 +189,7 @@
             throw 'ele.insertAt : Error: Exp. given i to be 0 for insertion in node w/o children!';
         }
 
-        f.append(ele, parentNode, flexOrder);
+        f.append(ele, parentNode, flexOrder, onFlexOrderChanged);
         //
         // Actual ordering of entries is done via flexbox.
     };
@@ -208,11 +215,17 @@
     };
 
     f.createAndInsert = function(
-        tagName, parentNode, flexOrder, flexDir, styles, className)
+        tagName,
+        parentNode,
+        flexOrder,
+        flexDir,
+        styles,
+        className,
+        onFlexOrderChanged)
     {
         var retVal = f.create(tagName, flexDir, styles, className);
 
-        f.insertAt(retVal, parentNode, flexOrder);
+        f.insertAt(retVal, parentNode, flexOrder, onFlexOrderChanged);
         return retVal;
     };
     
