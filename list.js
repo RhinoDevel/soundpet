@@ -64,6 +64,10 @@
             g.ele.setNodesEnabled(l.childNodes[i].childNodes, isEnabled);
         }
     };
+    f.scrollIntoView = function(l, i)
+    {
+        g.ele.getChildAt(l, i).scrollIntoView(false);
+    };
     f.insertInTopRowAt = function(r, ele, i)
     {
         return g.ele.insertAt(ele, r, i);
@@ -133,6 +137,10 @@
         retVal.setEnabled = function(isEnabled)
         {
             return f.setEnabled(listEle, isEnabled);
+        };
+        retVal.scrollIntoView = function(i)
+        {
+            return f.scrollIntoView(listEle, i);
         };
         retVal.insertInTopRowAt = function(ele, i)
         {
