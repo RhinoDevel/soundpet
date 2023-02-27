@@ -102,11 +102,12 @@
                 divEle,
                 1,
                 'column',
-                {height: 'inherit'},
+                {
+                    height: 'inherit',
+                    'overflow-y': 'scroll',
+                    'background-color': 'lightcyan'
+                },
                 null);
-
-        listEle.style['overflow-y'] = 'scroll';
-        listEle.style['background-color'] = 'lightcyan';
 
         g.ele.stopBubbling(listEle, ['keyup', 'keydown']);
 
