@@ -64,6 +64,14 @@
             g.ele.setNodesEnabled(l.childNodes[i].childNodes, isEnabled);
         }
     };
+    f.insertInTopRowAt = function(r, ele, i)
+    {
+        return g.ele.insertAt(ele, r, i);
+    };
+    f.appendToTopRow = function(r, ele)
+    {
+        return f.insertInTopRowAt(r, ele, r.childNodes.length);
+    };
 
     /**
      * - Returns the list object, NOT just the element.
@@ -71,13 +79,27 @@
     f.createAndInsert = function(p)
     {
         const retVal = {},
-            listEle = g.ele.createAndInsert(
+            divEle = g.ele.createAndInsert(
                 'div',
                 p.parentNode,
                 p.flexOrder,
                 'column',
                 p.styles,
-                p.className);
+                p.className),
+            topRowEle = g.ele.createAndInsert(
+                'div',
+                divEle,
+                0,
+                'row',
+                null,
+                null),
+            listEle = g.ele.createAndInsert(
+                'div',
+                divEle,
+                1,
+                'column',
+                {height: 'inherit'},
+                null);
 
         listEle.style['overflow-y'] = 'scroll';
         listEle.style['background-color'] = 'lightcyan';
@@ -111,6 +133,14 @@
         retVal.setEnabled = function(isEnabled)
         {
             return f.setEnabled(listEle, isEnabled);
+        };
+        retVal.insertInTopRowAt = function(ele, i)
+        {
+            return f.insertInTopRowAt(topRowEle, ele, i);
+        };
+        retVal.appendToTopRow = function(ele)
+        {
+            return f.appendToTopRow(topRowEle, ele);
         };
         return retVal;
     };
