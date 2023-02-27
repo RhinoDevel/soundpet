@@ -70,7 +70,9 @@
     };
     f.insertInTopRowAt = function(r, ele, i)
     {
-        return g.ele.insertAt(ele, r, i);
+        g.ele.insertAt(ele, r, i);
+
+        ele.style['font-family'] = 'inherit';
     };
     f.appendToTopRow = function(r, ele)
     {
