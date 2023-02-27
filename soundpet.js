@@ -882,6 +882,7 @@
                 v.tune.splice(j, 0, c.defaultNote.slice());
 
                 f.insertNoteEle(v.tune[j], j); // *** "RECURSION" ***
+                v.tuneList.scrollIntoView(j);
             });
 
         toneEle = v.ele.createAndInsert(
@@ -1024,6 +1025,7 @@
                 v.tune.push(c.defaultNote.slice());
 
                 f.insertNoteEle(v.tune[v.tune.length - 1], v.tune.length - 1);
+                v.tuneList.scrollIntoView(v.tune.length - 1);
             });
         v.tuneList.appendToTopRow(tuneListAddButEle);
         
