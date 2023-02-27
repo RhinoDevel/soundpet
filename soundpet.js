@@ -221,16 +221,18 @@
 
     // TODO: Add note/pause maximum length (see PET/CBM)!
 
-    v.tune = [
-        [50, 0], // Length in multiples of step and note's index (255 = pause).
-        [50, 2], 
-        [50, 4], 
-        [50, 5], 
-        [100, 7],
-        [50, 9], 
-        [50, 11], 
-        [100, 12]
-    ];
+    // v.tune = [
+    //     [50, 0], // Length in multiples of step and note's index (255 = pause).
+    //     [50, 2],
+    //     [50, 4],
+    //     [50, 5],
+    //     [100, 7],
+    //     [50, 9],
+    //     [50, 11],
+    //     [100, 12]
+    // ];
+    v.tune = [[12,7],[8,12],[9,255],[11,12],[8,14],[11,255],[6,14],[9,16],[8,19],[3,255],[9,16],[1,255],[18,12],[9,7],[1,255],[7,12],[11,255],[9,12],[2,255],[7,14],[10,255],[11,14],[27,16],[21,12],[9,7],[7,12],[12,255],[8,12],[2,255],[7,14],[11,255],[6,14],[9,16],[6,19],[6,255],[7,16],[4,255],[24,12],[3,255],[27,21],[19,14],[7,17],[4,255],[27,16],[35,12]];
+    //
     v.tuneIndex = -1;
     v.tuneSteps = 0;
     v.tuneNeedsRedraw = true;
@@ -1016,10 +1018,26 @@
             = v.math.getHex(i, 4); // Hard-coded!
     };
 
+    f.export = function()
+    {
+        var data = {
+                step: 20, // ms (e.g. 20ms for 50Hz/FPS). // Hard-coded
+                notes: c.notes,
+                tune: v.tune
+            },
+            url = URL.createObjectURL(
+                    new Blob([JSON.stringify(data)],
+                    {type: 'application/json'}));
+
+        window.open(url);
+        URL.revokeObjectURL(url);
+    };
+
     f.init = function(p)
     {
         var buf = null,
-            tuneListAddButEle = null;
+            tuneListAddButEle = null,
+            tuneListExpButEle = null;
 
         v.cmdKeyStates = {};
         for(buf in c.keyToCmd)
@@ -1037,6 +1055,7 @@
         v.status = p.status;
         
         v.tuneList = p.tuneList;
+
         tuneListAddButEle = gamupet.ele.create('button');
         tuneListAddButEle.textContent = '+'; // Hard-coded
         tuneListAddButEle.title = 'Insert note.'; // Hard-coded
@@ -1051,6 +1070,13 @@
                 v.tuneList.scrollIntoView(v.tune.length - 1);
             });
         v.tuneList.appendToTopRow(tuneListAddButEle);
+
+        tuneListExpButEle = gamupet.ele.create('button');
+        tuneListExpButEle.textContent = 'e';
+        tuneListExpButEle.title = 'Export tune.';
+        tuneListExpButEle.tabIndex = -1;
+        tuneListExpButEle.addEventListener('click', f.export);
+        v.tuneList.appendToTopRow(tuneListExpButEle);
 
         v.tuneList.setOnFlexOrderChanged(f.onTuneListFlexOrderChanged);
         
