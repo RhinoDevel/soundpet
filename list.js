@@ -59,8 +59,10 @@
             ele.scrollIntoView(false);
         }
     };
-    f.setEnabled = function(l, isEnabled)
+    f.setEnabled = function(l, r, isEnabled)
     {
+        g.ele.setNodesEnabled(r.childNodes, isEnabled);
+
         for(let i = 0;i < l.childNodes.length; ++i)
         {
             g.ele.setNodesEnabled(l.childNodes[i].childNodes, isEnabled);
@@ -145,7 +147,7 @@
         };
         retVal.setEnabled = function(isEnabled)
         {
-            return f.setEnabled(listEle, isEnabled);
+            return f.setEnabled(listEle, topRowEle, isEnabled);
         };
         retVal.scrollIntoView = function(i)
         {
