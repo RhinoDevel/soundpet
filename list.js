@@ -21,23 +21,25 @@
     c.bgColor.marked = 'yellow';
     c.bgColor.unmarked = 'lightblue';
 
-    f.removeAt = function(l, i)
+    f.removeAt = function(l, i, onFlexOrderChanged)
     {
-        return g.ele.removeAt(l, i);
+        return g.ele.removeAt(l, i, onFlexOrderChanged);
     };
     f.removeAll = function(l)
     {
+        // NOT calling on-flex-order-changed callback, here.
+
         g.ele.clearContent(l);
     };
-    f.insertAt = function(l, ele, i)
+    f.insertAt = function(l, ele, i, onFlexOrderChanged)
     {
         ele.style['background-color'] = c.bgColor.unmarked;
 
-        return g.ele.insertAt(ele, l, i);
+        return g.ele.insertAt(ele, l, i, onFlexOrderChanged);
     };
-    f.append = function(l, ele)
+    f.append = function(l, ele, onFlexOrderChanged)
     {
-        return f.insertAt(l, ele, l.childNodes.length);
+        return f.insertAt(l, ele, l.childNodes.length, onFlexOrderChanged);
     };
     f.markNone = function(l)
     {
@@ -70,7 +72,7 @@
     };
     f.insertInTopRowAt = function(r, ele, i)
     {
-        g.ele.insertAt(ele, r, i);
+        g.ele.insertAt(ele, r, i, null);
 
         ele.style['font-family'] = 'inherit';
     };
@@ -91,12 +93,14 @@
                 p.flexOrder,
                 'column',
                 p.styles,
-                p.className),
+                p.className,
+                null),
             topRowEle = g.ele.createAndInsert(
                 'div',
                 divEle,
                 0,
                 'row',
+                null,
                 null,
                 null),
             listEle = g.ele.createAndInsert(
@@ -109,13 +113,15 @@
                     'overflow-y': 'scroll',
                     'background-color': 'lightcyan'
                 },
+                null,
                 null);
+        let curOnFlexOrderChanged = null;
 
         g.ele.stopBubbling(listEle, ['keyup', 'keydown']);
 
         retVal.removeAt = function(i)
         {
-            return f.removeAt(listEle, i);
+            return f.removeAt(listEle, i, curOnFlexOrderChanged);
         };
         retVal.removeAll = function()
         {
@@ -123,11 +129,11 @@
         };
         retVal.insertAt = function(ele, i)
         {
-            return f.insertAt(listEle, ele, i);
+            return f.insertAt(listEle, ele, i, curOnFlexOrderChanged);
         };
         retVal.append = function(ele)
         {
-            return f.append(listEle, ele);
+            return f.append(listEle, ele, curOnFlexOrderChanged);
         };
         retVal.markNone = function()
         {
@@ -152,6 +158,16 @@
         retVal.appendToTopRow = function(ele)
         {
             return f.appendToTopRow(topRowEle, ele);
+        };
+        
+        retVal.setOnFlexOrderChanged = function(onFlexOrderChanged)
+        {
+            if(typeof onFlexOrderChanged === 'function')
+            {
+                curOnFlexOrderChanged = onFlexOrderChanged;
+                return;
+            }
+            curOnFlexOrderChanged = null;
         };
         return retVal;
     };
