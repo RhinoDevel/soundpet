@@ -117,7 +117,37 @@
                 },
                 null,
                 null);
-        let curOnFlexOrderChanged = null;
+        let curOnFlexOrderChanged = null,
+            curOnDrop = null;
+
+        divEle.addEventListener(
+            'drop',
+            function(event)
+            {
+                if(curOnDrop === null)
+                {
+                    return;
+                }
+
+                event.stopPropagation();
+                event.preventDefault();
+
+                curOnDrop(event);
+            });
+        divEle.addEventListener(
+            'dragenter',
+            function(event)
+            {
+                event.stopPropagation();
+                event.preventDefault();
+            });
+        divEle.addEventListener(
+            'dragover',
+            function(event)
+            {
+                event.stopPropagation();
+                event.preventDefault();
+            });
 
         g.ele.stopBubbling(listEle, ['keyup', 'keydown']);
 
@@ -171,6 +201,15 @@
             }
             curOnFlexOrderChanged = null;
         };
+        retVal.setOnDrop = function(onDrop)
+        {
+            if(typeof onDrop === 'function')
+            {
+                curOnDrop = onDrop;
+                return;
+            }
+            curOnDrop = null;
+        }
         return retVal;
     };
 
