@@ -21,6 +21,9 @@
     c.bgColor.marked = 'yellow';
     c.bgColor.unmarked = 'lightblue';
 
+    c.class = {};
+    c.class.entry = 'li_entry';
+
     f.removeAt = function(l, i, onFlexOrderChanged)
     {
         return g.ele.removeAt(l, i, onFlexOrderChanged);
@@ -34,6 +37,7 @@
     f.insertAt = function(l, ele, i, onFlexOrderChanged)
     {
         ele.style['background-color'] = c.bgColor.unmarked;
+        g.ele.addClass(ele, c.class.entry);
 
         return g.ele.insertAt(ele, l, i, onFlexOrderChanged);
     };
@@ -119,7 +123,36 @@
                 null);
         let curOnFlexOrderChanged = null,
             curOnDrop = null,
+            curOnClick = null,
             curIsEnabled = true; // Is enabled by default.
+
+        listEle.addEventListener(
+            'click',
+            function(event)
+            {
+                let entryEle = null;
+
+                if(curOnClick === null)
+                {
+                    return;
+                }
+
+                event.stopPropagation();
+                event.preventDefault();
+
+                if(!curIsEnabled)
+                {
+                    return;
+                }
+
+                entryEle = event.target.closest('.' + c.class.entry);
+                if(entryEle === null)
+                {
+                    return;
+                }
+
+                curOnClick(parseInt(entryEle.style.order, 10));
+            });
 
         divEle.addEventListener(
             'drop',
@@ -137,7 +170,7 @@
                 {
                     return;
                 }
-                
+
                 curOnDrop(event);
             });
         divEle.addEventListener(
@@ -217,6 +250,15 @@
                 return;
             }
             curOnDrop = null;
+        };
+        retVal.setOnClick = function(onClick)
+        {
+            if(typeof onClick === 'function')
+            {
+                curOnClick = onClick;
+                return;
+            }
+            curOnClick = null;
         };
         return retVal;
     };
