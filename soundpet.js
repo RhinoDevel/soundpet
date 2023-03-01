@@ -1018,6 +1018,38 @@
             = v.math.getHex(i, 4); // Hard-coded!
     };
 
+    // TODO: Preven during record and play mode!
+    //
+    f.onTuneListDrop = function(event)
+    {
+        var reader = null;
+
+        if(event.dataTransfer.files.length !== 1)
+        {
+            return;
+        }
+
+        reader = new FileReader();
+        reader.onload = function(/*event*/)
+		{
+			var data = JSON.parse(reader.result); // TODO: Error checks!
+
+            if(data.step !== 20) // ms (e.g. 20ms for 50Hz/FPS). // Hard-coded
+            {
+                throw 'soundpet.onTuneListDrop : Error: Unsupported step length!';
+            }
+
+            // TODO: Check given notes or even use them!
+
+            // TODO: Check given tune!
+
+            v.tune = data.tune;
+            
+            v.tuneNeedsRedraw = true; // TODO: Enough?
+		};
+        reader.readAsText(event.dataTransfer.files[0]);
+    };
+
     f.export = function()
     {
         var data = {
@@ -1079,7 +1111,8 @@
         v.tuneList.appendToTopRow(tuneListExpButEle);
 
         v.tuneList.setOnFlexOrderChanged(f.onTuneListFlexOrderChanged);
-        
+        v.tuneList.setOnDrop(f.onTuneListDrop);
+
         v.noteplay.init(
             {
                 octaveCount: 8,
