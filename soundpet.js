@@ -500,11 +500,15 @@
         v.lastStatusCall = timestamp;
     };
 
-    f.stopPlayMode = function()
+    f.stopPlayMode = function(rewind)
     {
-        v.tuneList.markNone();
-
-        v.tuneIndex = -1;
+        if(rewind)
+        {
+            v.tuneList.markNone();
+            
+            v.tuneIndex = -1;
+        }
+        
         v.tuneSteps = 0;
 
         f.stop();
@@ -594,7 +598,7 @@
             {
                 // No other note/pause in tune.
 
-                f.stopPlayMode(); // Stop play (mode).
+                f.stopPlayMode(true); // Stop play (mode).
                 v.mode = 'practice'; // Go back to practice mode.
                 v.tuneList.setEnabled(true);
                 return;
@@ -649,11 +653,12 @@
                 {
                     break; // Nothing to do, here.
                 }
-                if(nextMode !== 'rec')
+                if(nextMode === 'rec')
                 {
-                    throw 'Error: Invalid change from practice mode!';
+                    v.tuneIndex = -1;
+                    break;
                 }
-                break;
+                throw 'Error: Invalid change from practice mode!';
             }
             case 'play':
             {
@@ -661,7 +666,7 @@
                 {
                     throw 'Error: Invalid change from play mode!';
                 }
-                f.stopPlayMode();
+                f.stopPlayMode(false);
                 v.tuneList.setEnabled(true);
                 break;
             }
@@ -880,7 +885,7 @@
         insertButEle.tabIndex = -1;
         insertButEle.addEventListener(
             'click',
-            function()
+            function(event)
             {
                 var j = parseInt(lineEle.style.order, 10) + 1;
                 //
@@ -890,6 +895,8 @@
 
                 f.insertNoteEle(v.tune[j], j); // *** "RECURSION" ***
                 v.tuneList.scrollIntoView(j);
+
+                event.stopPropagation();
             });
 
         nrDivEle = v.ele.createAndInsert(
@@ -917,9 +924,11 @@
         toneEle.size = 3;
         toneEle.addEventListener(
             'click',
-            function()
+            function(event)
             {
                 toneEle.select();
+
+                event.stopPropagation();
             });
         toneEle.addEventListener(
             'blur',
@@ -952,9 +961,11 @@
         lenEle.size = 4;
         lenEle.addEventListener(
             'click',
-            function()
+            function(event)
             {
                 lenEle.select();
+
+                event.stopPropagation();
             });
         lenEle.addEventListener(
             'blur',
@@ -982,7 +993,7 @@
             delButEle.tabIndex = -1;
             delButEle.addEventListener(
                 'click',
-                function()
+                function(event)
                 {
                     var j = parseInt(lineEle.style.order, 10);
                     //
@@ -991,6 +1002,8 @@
                     v.tune.splice(j, 1);
                     
                     v.tuneList.removeAt(j);
+
+                    event.stopPropagation();
                 });
 
         v.tuneList.insertAt(lineEle, i);
@@ -1048,6 +1061,14 @@
             v.tuneNeedsRedraw = true; // TODO: Enough?
 		};
         reader.readAsText(event.dataTransfer.files[0]);
+    };
+
+    f.onTuneListClick = function(i)
+    {
+        // (list does not call this method, if currently disabled)
+
+        v.tuneIndex = i;
+        v.tuneList.markSingle(v.tuneIndex, false);
     };
 
     f.export = function()
@@ -1112,6 +1133,7 @@
 
         v.tuneList.setOnFlexOrderChanged(f.onTuneListFlexOrderChanged);
         v.tuneList.setOnDrop(f.onTuneListDrop);
+        v.tuneList.setOnClick(f.onTuneListClick);
 
         v.noteplay.init(
             {
