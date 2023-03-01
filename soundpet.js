@@ -1018,11 +1018,11 @@
             = v.math.getHex(i, 4); // Hard-coded!
     };
 
-    // TODO: Preven during record and play mode!
-    //
     f.onTuneListDrop = function(event)
     {
         var reader = null;
+
+        // (list does not call this method, if currently disabled)
 
         if(event.dataTransfer.files.length !== 1)
         {

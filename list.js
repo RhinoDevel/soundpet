@@ -118,7 +118,8 @@
                 null,
                 null);
         let curOnFlexOrderChanged = null,
-            curOnDrop = null;
+            curOnDrop = null,
+            curIsEnabled = true; // Is enabled by default.
 
         divEle.addEventListener(
             'drop',
@@ -132,6 +133,11 @@
                 event.stopPropagation();
                 event.preventDefault();
 
+                if(!curIsEnabled)
+                {
+                    return;
+                }
+                
                 curOnDrop(event);
             });
         divEle.addEventListener(
@@ -177,6 +183,8 @@
         };
         retVal.setEnabled = function(isEnabled)
         {
+            curIsEnabled = isEnabled;
+
             return f.setEnabled(listEle, topRowEle, isEnabled);
         };
         retVal.scrollIntoView = function(i)
@@ -209,7 +217,7 @@
                 return;
             }
             curOnDrop = null;
-        }
+        };
         return retVal;
     };
 
