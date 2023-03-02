@@ -60,7 +60,7 @@
 
         if(scrollTo)
         {
-            ele.scrollIntoView(false);
+            g.ele.vertScrollTo(l, ele);
         }
     };
     f.setEnabled = function(l, r, isEnabled)
@@ -72,9 +72,9 @@
             g.ele.setNodesEnabled(l.childNodes[i].childNodes, isEnabled);
         }
     };
-    f.scrollIntoView = function(l, i)
+    f.vertScrollTo = function(l, i)
     {
-        g.ele.getChildAt(l, i).scrollIntoView(false);
+        g.ele.vertScrollTo(l, g.ele.getChildAt(l, i));
     };
     f.insertInTopRowAt = function(r, ele, i)
     {
@@ -220,9 +220,9 @@
 
             return f.setEnabled(listEle, topRowEle, isEnabled);
         };
-        retVal.scrollIntoView = function(i)
+        retVal.vertScrollTo = function(i)
         {
-            return f.scrollIntoView(listEle, i);
+            return f.vertScrollTo(listEle, i);
         };
         retVal.insertInTopRowAt = function(ele, i)
         {
