@@ -273,6 +273,34 @@
             });
     };
 
+    f.getSize = function(ele)
+    {
+        var r = ele.getBoundingClientRect();
+
+        return {width: r.right - r.left, height: r.bottom - r.top};
+    };
+    f.getViewPortPos = function(ele)
+    {
+        var r = ele.getBoundingClientRect();
+
+        return { x: r.left, y: r.top };
+    };
+    f.vertScrollTo = function(ele, childEle)
+    { 
+        var pos = f.getViewPortPos(ele).y,
+            childPos = f.getViewPortPos(childEle).y;
+
+        if(childPos < pos)
+        {
+            childEle.scrollIntoView();
+            return;
+        }
+        if(pos + f.getSize(ele).height - f.getSize(childEle).height <= childPos)
+        {
+            childEle.scrollIntoView(false);
+        }
+    };
+
     o.createCanvas = f.createCanvas;
     
     o.create = f.create;
@@ -300,6 +328,12 @@
     o.setNodesEnabled = f.setNodesEnabled;
 
     o.stopBubbling = f.stopBubbling;
+
+    o.getSize = f.getSize;
+
+    o.getViewPortPos = f.getViewPortPos;
+
+    o.vertScrollTo = f.vertScrollTo;
 
     gamupet.ele = o;
 }());
