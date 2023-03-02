@@ -1111,16 +1111,19 @@
 
         tuneListAddButEle = gamupet.ele.create('button');
         tuneListAddButEle.textContent = '+'; // Hard-coded
-        tuneListAddButEle.title = 'Insert note.'; // Hard-coded
+        tuneListAddButEle.title =
+            'Insert note (hold CTRL to insert at top).'; // Hard-coded
         tuneListAddButEle.tabIndex = -1;
         tuneListAddButEle.addEventListener(
             'click',
-            function()
+            function(event)
             {
-                v.tune.push(c.defaultNote.slice());
+                var i = event.ctrlKey ? 0 : v.tune.length;
 
-                f.insertNoteEle(v.tune[v.tune.length - 1], v.tune.length - 1);
-                v.tuneList.vertScrollTo(v.tune.length - 1);
+                v.tune.splice(i, 0, c.defaultNote.slice());
+
+                f.insertNoteEle(v.tune[i], i);
+                v.tuneList.vertScrollTo(i);
             });
         v.tuneList.appendToTopRow(tuneListAddButEle);
 
