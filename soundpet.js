@@ -1152,11 +1152,17 @@
             'click',
             function(/*event*/)
             {
-                v.tune.splice(0, v.tune.length);
+                gamupet.modal.showOkCancel(
+                    'Really remove all notes?',
+                    function()
+                    {
+                        v.tune.splice(0, v.tune.length);
 
-                v.tuneIndex = -1;
-
-                v.tuneList.removeAll();
+                        v.tuneIndex = -1;
+        
+                        v.tuneList.removeAll();
+                    },
+                    null);
             });
         v.tuneList.appendToTopRow(tuneListDelAllButEle);
 
