@@ -1090,6 +1090,7 @@
     {
         var buf = null,
             tuneListAddButEle = null,
+            tuneListDelAllButEle = null,
             tuneListExpButEle = null;
 
         v.cmdKeyStates = {};
@@ -1133,6 +1134,22 @@
         tuneListExpButEle.tabIndex = -1;
         tuneListExpButEle.addEventListener('click', f.export);
         v.tuneList.appendToTopRow(tuneListExpButEle);
+
+        tuneListDelAllButEle = gamupet.ele.create('button');
+        tuneListDelAllButEle.textContent = '-'; // Hard-coded
+        tuneListDelAllButEle.title = 'Delete all notes.';
+        tuneListDelAllButEle.tabIndex = -1;
+        tuneListDelAllButEle.addEventListener(
+            'click',
+            function(/*event*/)
+            {
+                v.tune.splice(0, v.tune.length);
+
+                v.tuneIndex = -1;
+
+                v.tuneList.removeAll();
+            });
+        v.tuneList.appendToTopRow(tuneListDelAllButEle);
 
         v.tuneList.setOnFlexOrderChanged(f.onTuneListFlexOrderChanged);
         v.tuneList.setOnDrop(f.onTuneListDrop);
