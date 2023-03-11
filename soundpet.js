@@ -1067,6 +1067,15 @@
     {
         // (list does not call this method, if currently disabled)
 
+        if(v.tuneIndex === i) // Deselect.
+        {
+            v.tuneIndex = -1;
+            v.tuneList.markNone();
+            return;
+        }
+
+        // Select:
+
         v.tuneIndex = i;
         v.tuneList.markSingle(v.tuneIndex, false);
     };
